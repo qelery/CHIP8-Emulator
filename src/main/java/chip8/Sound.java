@@ -7,9 +7,9 @@ import javax.sound.sampled.SourceDataLine;
 
 public class Sound {
 
-    private boolean isPlaying;
     private SourceDataLine sourceDL;
-    private byte[] buffer = new byte[256];
+    private final byte[] buffer = new byte[256];
+    private boolean isPlaying;
 
     /**
      * Creates a sound that will be played whenever the sound timer is > 0.
@@ -28,9 +28,7 @@ public class Sound {
 
         int volume = 7; // volume > 10 is loud
         float rate = 44100;
-
-        AudioFormat audioF;
-        audioF = new AudioFormat(rate, 8, 1, true, false);
+        AudioFormat audioF = new AudioFormat(rate, 8, 1, true, false);
         this.sourceDL = AudioSystem.getSourceDataLine(audioF);
         sourceDL.open(audioF);
         sourceDL.start();
@@ -46,7 +44,6 @@ public class Sound {
         if (isPlaying) {
             return;
         }
-
         isPlaying = true;
         Thread playThread = new SoundThread();
         playThread.setPriority(Thread.MAX_PRIORITY);

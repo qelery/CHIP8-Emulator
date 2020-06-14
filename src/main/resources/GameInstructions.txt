@@ -1,6 +1,6 @@
 15PUZZLE: Rearrange the tile into the sequence 0-F. Move tiles by it's associated keys.
 
-AIRPLANE: Hit the ground below without hitting other planes. Press "8" to drop a bomb.
+AIRPLANE: Hit the ground below without hitting other planes. Press "S" to drop a bomb.
 
 ASTRODODGE: Navigate through the asteroid belt, dodging asteroids to score points. <br> Keys 2, Q, E, S move the ship. Key W starts the game.
 

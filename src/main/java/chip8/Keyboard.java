@@ -38,106 +38,106 @@ public class Keyboard {
     }
 
     public void setKeyDown(KeyCode code) {
-        switch (code.toString()) {
-            case "DIGIT1":
+        switch (code) {
+            case DIGIT1:
                 keys[0x1] = true;
                 break;
-            case "DIGIT2":
+            case DIGIT2:
                 keys[0x2] = true;
                 break;
-            case "DIGIT3":
+            case DIGIT3:
                 keys[0x3] = true;
                 break;
-            case "DIGIT4":
+            case DIGIT4:
                 keys[0xC] = true;
                 break;
-            case "Q":
+            case Q:
                 keys[0x4] = true;
                 break;
-            case "W":
+            case W:
                 keys[0x5] = true;
                 break;
-            case "E":
+            case E:
                 keys[0x6] = true;
                 break;
-            case "R":
+            case R:
                 keys[0xD] = true;
                 break;
-            case "A":
+            case A:
                 keys[0x7] = true;
                 break;
-            case "S":
+            case S:
                 keys[0x8] = true;
                 break;
-            case "D":
+            case D:
                 keys[0x9] = true;
                 break;
-            case "F":
+            case F:
                 keys[0xE] = true;
                 break;
-            case "Z":
+            case Z:
                 keys[0xA] = true;
                 break;
-            case "X":
+            case X:
                 keys[0x0] = true;
                 break;
-            case "C":
+            case C:
                 keys[0xB] = true;
                 break;
-            case "V":
+            case V:
                 keys[0xF] = true;
                 break;
         }
     }
 
     public void releaseKey(KeyCode code) {
-        switch (code.toString()) {
-            case "DIGIT1":
+        switch (code) {
+            case DIGIT1:
                 keys[0x1] = false;
                 break;
-            case "DIGIT2":
+            case DIGIT2:
                 keys[0x2] = false;
                 break;
-            case "DIGIT3":
+            case DIGIT3:
                 keys[0x3] = false;
                 break;
-            case "DIGIT4":
+            case DIGIT4:
                 keys[0xC] = false;
                 break;
-            case "Q":
+            case Q:
                 keys[0x4] = false;
                 break;
-            case "W":
+            case W:
                 keys[0x5] = false;
                 break;
-            case "E":
+            case E:
                 keys[0x6] = false;
                 break;
-            case "R":
+            case R:
                 keys[0xD] = false;
                 break;
-            case "A":
+            case A:
                 keys[0x7] = false;
                 break;
-            case "S":
+            case S:
                 keys[0x8] = false;
                 break;
-            case "D":
+            case D:
                 keys[0x9] = false;
                 break;
-            case "F":
+            case F:
                 keys[0xE] = false;
                 break;
-            case "Z":
+            case Z:
                 keys[0xA] = false;
                 break;
-            case "X":
+            case X:
                 keys[0x0] = false;
                 break;
-            case "C":
+            case C:
                 keys[0xB] = false;
                 break;
-            case "V":
+            case V:
                 keys[0xF] = false;
                 break;
         }

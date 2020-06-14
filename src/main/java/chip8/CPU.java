@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class CPU {
 
-    private int clockSpeed; // hertz
+    private final int clockSpeed; // hertz
 
     private int delayTimer;
     private int soundTimer;
@@ -18,6 +18,7 @@ public class CPU {
     private int pc; // program counter
 
     private boolean drawFlag;
+    private final Random random;
 
     private Memory memory;
     private Screen screen;
@@ -38,6 +39,7 @@ public class CPU {
         this.screen = screen;
         this.sound = sound;
         this.keyboard = keyboard;
+        this.random = new Random();
     }
 
     public int getClockSpeed() {
@@ -117,7 +119,6 @@ public class CPU {
             sp--;
             return;
         }
-
         switch(opcode) {
 
             case 0x1:
@@ -138,7 +139,7 @@ public class CPU {
                 // 3xkk
                 // Skip next instruction if Vx = kk
                 if (VRegister[x] == kk) {
-                    pc += 2;
+                    incrementPC();
                 }
                 return;
 
@@ -146,7 +147,7 @@ public class CPU {
                 // 4xkk
                 // Skip next instruction if Vx != kk
                 if (VRegister[x] != kk) {
-                    pc += 2;
+                    incrementPC();
                 }
                 return;
 
@@ -155,7 +156,7 @@ public class CPU {
                 // conditional skip next instruction
                 if (n == 0) {
                     if (VRegister[x] == VRegister[y]) {
-                        pc += 2;
+                        incrementPC();
                     }
                     return;
                 }
@@ -262,7 +263,7 @@ public class CPU {
                 // Skip next instruction if Vx != Vy
                 if (n == 0) {
                     if (VRegister[x] != VRegister[y]) {
-                        pc += 2;
+                        incrementPC();
                     }
                     return;
                 }
@@ -281,7 +282,6 @@ public class CPU {
             case 0xC:
                 // Cxkk
                 // Set Vx = random byte AND kk
-                Random random = new Random();
                 int randomUnsignedByte = random.nextInt(266);
                 VRegister[x] = randomUnsignedByte & kk;
                 return;
@@ -321,7 +321,7 @@ public class CPU {
                         //Ex9E
                         // Skip next instruction if key with the value of Vx is pressed
                         if (keyboard.isKeyPressed(VRegister[x])) {
-                            pc += 2;
+                            incrementPC();
                         }
                         return;
 
@@ -329,7 +329,7 @@ public class CPU {
                         // ExA1
                         // Skip next instruction if key with the value of Vx is not pressed
                         if (!keyboard.isKeyPressed(VRegister[x])) {
-                            pc += 2;
+                            incrementPC();
                         }
                         return;
                 }

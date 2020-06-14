@@ -4,6 +4,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import java.util.Arrays;
+
 public class Screen extends Canvas {
 
     public static final int NUM_PIXEL_COLUMNS = 64;
@@ -34,9 +36,7 @@ public class Screen extends Canvas {
 
     public void clear() {
         for (int x = 0; x < NUM_PIXEL_COLUMNS; x++) {
-            for (int y = 0; y < NUM_PIXEL_ROWS; y++) {
-                pixelArr[x][y] = 0;
-            }
+            Arrays.fill(pixelArr[x], 0);
         }
     }
 
