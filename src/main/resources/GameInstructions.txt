@@ -1,0 +1,31 @@
+15PUZZLE: Rearrange the tile into the sequence 0-F. Move tiles by it's associated keys.
+
+AIRPLANE: Hit the ground below without hitting other planes. Press "8" to drop a bomb.
+
+ASTRODODGE: Navigate through the asteroid belt, dodging asteroids to score points. <br> Keys 2, Q, E, S move the ship. Key W starts the game.
+
+BOWLING: Key W releases the ball straight in a straight line. <br> Keys 1, 2, 3 put left spins on the ball. Keys A, S, D put right spins on the ball.
+
+BREAKOUT: Destroy all of the bricks. Use keys Q and E to move your paddle.
+
+BRIX: Destroy all of the bricks. Use keys Q and E to move your paddle.
+
+HIDDEN: [2] - move UP,  [S] - move DOWN,  [Q] - move LEFT,  [E] - move RIGHT <br>A memory game. Match all pairs to win. Press Key W to reveal a card.<br> SC is your score. HI is your best score (least moves made to finish).
+
+INVADERS: Destroy the alien invaders with your ship.<br>Key W to shoot. Keys Q and E to move. Key W to begin the game.
+
+KALEIDOSCOPE: Press keys 2, Q, E, S to create a pattern.
+
+MERLIN: Repeat the pattern. The pattern gets longer the higher the level. <br> Keys Q / W for the upper squares. Keys A / S for the lower squares.
+
+MISSILE: Key S to shoot the hanging target. <br> The ship moves faster with each shot.
+
+PONG: A table tennis game. <br> [1] - move UP,  [Q] - move DOWN
+
+PUZZLE: The tiles will mix themselves up well. <br> When they stop, put them back in order 0-F. <br> Your arrow keys are 2, Q, E, ans S.
+
+SUBMARINE: Score points by hitting the subs below. Key W to fire. <br> Large subs are 5 points. Small subs are 10 points.
+
+TETRIS: Key W moves piece left. Key moves piece right. <br> Key Q rotates piece. Key A speeds fall.
+
+UFO: Shoot your missiles at the UFOs. The smaller UFO is worth more points.<br> [Q] - shoot LEFT diagonal,  [W] - shoot straight UP,  [E] - shoot RIGHT diagonal
