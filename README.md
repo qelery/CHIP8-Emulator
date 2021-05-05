@@ -5,26 +5,25 @@ My CHIP-8 emulator built in Java.
 
 ## Usage
 
-You can run in the terminal using.
-```
-C:\Users\...\CHIP8-master> javac -p "src/main/resources/javafx/lib" --add-modules javafx.controls src/main/java/chip8/*.java
-C:\Users\...\CHIP8-master> java -p "src/main/resources/javafx/lib" --add-modules javafx.controls -cp src/main/java chip8.Main
-```
-Or you can run in an IDE like Intellij.
+* Clone and download this repository
+* In your terminal, navigate to the root of the repository (where the pom.xml file is)
+* In your terminal, run `maven clean javafx:run`
+* Instructions on selecting a game will appear in the terminal
+
 
 ## Images
-<img src="/images/1.png"  width="614" height="307">
+<img src="/images/1.png"  width="614" height="307" alt="">
 
 ROM selection
 
-<img src="/images/2.png"  width="614" height="307">
+<img src="/images/2.png"  width="614" height="307" alt="">
 
 Space Invaders Game ROM
 
-<img src="/images/3.png"  width="614" height="307">
+<img src="/images/3.png"  width="614" height="307" alt="">
 
 Hidden Game ROM
 
-<img src="/images/4.png"  width="614" height="307">
+<img src="/images/4.png"  width="614" height="307" alt="">
 
 Instructions for a ROM
