@@ -8,22 +8,21 @@ public class CPU {
 
     private int delayTimer;
     private int soundTimer;
-
     private int instruction;
 
-    private int[] VRegister;
+    private final int[] VRegister;
+    private final int[] stack;
     private int IRegister;
-    private int[] stack;
     private int sp; // stack pointer
     private int pc; // program counter
 
     private boolean drawFlag;
-    private final Random random;
 
-    private Memory memory;
-    private Screen screen;
-    private Sound sound;
-    private Keyboard keyboard;
+    private final Memory memory;
+    private final Screen screen;
+    private final Sound sound;
+    private final Keyboard keyboard;
+    private final Random random;
 
     /**
      * Creates an emulated cpu for fetching, decoding, and executing instructions from a CHIP-8 ROM.

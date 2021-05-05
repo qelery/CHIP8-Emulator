@@ -34,7 +34,7 @@ public class Sound {
         sourceDL.start();
 
         for (int i = 0; i < 256; i++) {
-            // tried numbers until I found a sound I liked
+            // tried numbers until I found a tone I liked
             double angle = (i / rate) * 2150;
             buffer[i] = (byte) (Math.sin(angle) * volume);
         }

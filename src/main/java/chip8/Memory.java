@@ -2,7 +2,7 @@ package chip8;
 
 public class Memory {
 
-    private int[] RAM;
+    private final int[] RAM;
 
     /**
      * Creates a Memory object where the font sprite and ROM data are loaded.

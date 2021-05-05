@@ -11,8 +11,8 @@ public class Screen extends Canvas {
     public static final int NUM_PIXEL_COLUMNS = 64;
     public static final int NUM_PIXEL_ROWS = 32;
     public static final int[][] pixelArr = new int[NUM_PIXEL_COLUMNS][NUM_PIXEL_ROWS];
-    private int scale;
-    private GraphicsContext gc;
+    private final int scale;
+    private final GraphicsContext gc;
 
     /**
      * Creates a Screen object that displays the graphical information of

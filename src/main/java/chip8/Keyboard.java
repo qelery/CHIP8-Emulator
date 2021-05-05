@@ -31,7 +31,7 @@ import javafx.scene.input.KeyCode;
  */
 public class Keyboard {
 
-    private boolean[] keys;
+    private final boolean[] keys;
 
     public Keyboard() {
         this.keys = new boolean[16];
