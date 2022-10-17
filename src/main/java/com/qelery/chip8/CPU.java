@@ -26,7 +26,6 @@ public class CPU {
 
     /**
      * Creates an emulated cpu for fetching, decoding, and executing instructions from a CHIP-8 ROM.
-     *
      */
     public CPU(int clockSpeed, Memory memory, Screen screen, Sound sound, Keyboard keyboard) {
         this.clockSpeed = clockSpeed;
@@ -39,14 +38,6 @@ public class CPU {
         this.sound = sound;
         this.keyboard = keyboard;
         this.random = new Random();
-    }
-
-    public int getClockSpeed() {
-        return clockSpeed;
-    }
-
-    public boolean isDrawFlagSet() {
-        return drawFlag;
     }
 
     public void clearDrawFlag() {
@@ -75,13 +66,13 @@ public class CPU {
     }
 
 
-    private void fetchInstruction() {
+    protected void fetchInstruction() {
         int firstByte = memory.readByte(pc);
         int secondByte = memory.readByte(pc + 1);
         instruction = ((firstByte << 8) & 0xFF00) | (secondByte & 0x00FF); // ensure unsigned
     }
 
-    private void incrementPC() {
+    protected void incrementPC() {
         pc += 2;
     }
 
@@ -95,7 +86,7 @@ public class CPU {
      * y - the higher nibble of the low byte of the instruction (■ ■ y ■)
      * kk - the lowest 2 nibbles of the instruction (■ ■ k k)
      */
-    private void decodeAndExecuteInstruction() {
+    protected void decodeAndExecuteInstruction() {
         int opcode = instruction >> 12 & 0x00F;
         int x = instruction >> 8 & 0x00F;
         int y = instruction >> 4 & 0x00F;
@@ -335,7 +326,7 @@ public class CPU {
 
             case 0xF:
 
-                switch(kk) {
+                switch (kk) {
 
                     case 0x07:
                         // Fx07
@@ -390,7 +381,7 @@ public class CPU {
                         int tensDigitOfVx = VRegister[x] % 100 / 10;
                         int hundredsDigitOfVx = VRegister[x] % 1000 / 100;
                         memory.writeByte(IRegister, hundredsDigitOfVx);
-                        memory.writeByte(IRegister + 1,  tensDigitOfVx);
+                        memory.writeByte(IRegister + 1, tensDigitOfVx);
                         memory.writeByte(IRegister + 2, onesDigitOfVx);
                         return;
 
@@ -414,5 +405,73 @@ public class CPU {
             default:
                 System.out.println(String.format("Unknown opcode: 0x%x\n", instruction));
         }
+    }
+
+    public int getClockSpeed() {
+        return clockSpeed;
+    }
+
+    public int getDelayTimer() {
+        return delayTimer;
+    }
+
+    public int getSoundTimer() {
+        return soundTimer;
+    }
+
+    public int getInstruction() {
+        return instruction;
+    }
+
+    public int[] getVRegister() {
+        return VRegister;
+    }
+
+    public int getIRegister() {
+        return IRegister;
+    }
+
+    public int getSp() {
+        return sp;
+    }
+
+    public int getPc() {
+        return pc;
+    }
+
+    public int[] getStack() {
+        return stack;
+    }
+
+    public boolean isDrawFlagSet() {
+        return drawFlag;
+    }
+
+    public void setDelayTimer(int delayTimer) {
+        this.delayTimer = delayTimer;
+    }
+
+    public void setSoundTimer(int soundTimer) {
+        this.soundTimer = soundTimer;
+    }
+
+    public void setInstruction(int instruction) {
+        this.instruction = instruction;
+    }
+
+    public void setIRegister(int IRegister) {
+        this.IRegister = IRegister;
+    }
+
+    public void setSp(int sp) {
+        this.sp = sp;
+    }
+
+    public void setPc(int pc) {
+        this.pc = pc;
+    }
+
+    public void setDrawFlag(boolean drawFlag) {
+        this.drawFlag = drawFlag;
     }
 }
