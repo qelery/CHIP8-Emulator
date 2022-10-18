@@ -1,6 +1,5 @@
 package com.qelery.chip8;
 
-import com.qelery.chip8.*;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -53,10 +52,10 @@ public class Main extends Application {
         stage.setResizable(false);
 
         scene.setOnKeyPressed(
-                e -> keyboard.setKeyDown(e.getCode()));
+                e -> keyboard.keyDown(e.getCode()));
 
         scene.setOnKeyReleased(
-                e -> keyboard.releaseKey(e.getCode()));
+                e -> keyboard.keyUp(e.getCode()));
 
 
         int frameHertz = 60; // CHIP-8 delay and sound timers always count down at 60 hz

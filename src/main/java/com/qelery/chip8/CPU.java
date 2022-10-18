@@ -310,7 +310,7 @@ public class CPU {
                     case 0x9E:
                         //Ex9E
                         // Skip next instruction if key with the value of Vx is pressed
-                        if (keyboard.isKeyPressed(VRegister[x])) {
+                        if (keyboard.isKeyDown(VRegister[x])) {
                             incrementPC();
                         }
                         return;
@@ -318,7 +318,7 @@ public class CPU {
                     case 0xA1:
                         // ExA1
                         // Skip next instruction if key with the value of Vx is not pressed
-                        if (!keyboard.isKeyPressed(VRegister[x])) {
+                        if (!keyboard.isKeyDown(VRegister[x])) {
                             incrementPC();
                         }
                         return;
@@ -339,9 +339,9 @@ public class CPU {
                         // Fx0A
                         // Wait for a key press, store the value of the key in Vx
                         for (int i = 0x0; i < 0xF; i++) {
-                            if (keyboard.isKeyPressed(i)) {
+                            if (keyboard.isKeyDown(i)) {
                                 VRegister[x] = i;
-                                keyboard.forceKeyRelease(i);
+                                keyboard.forceKeyUp(i);
                                 return;
                             }
                         }

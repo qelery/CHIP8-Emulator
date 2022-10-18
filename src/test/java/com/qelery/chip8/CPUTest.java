@@ -829,7 +829,7 @@ class CPUTest {
                 int kk = 0x009E; // last 2 nibbles of instruction
                 int instruction = opcode + (x << 8) + kk;
                 cpu.setInstruction(instruction);
-                Mockito.when(keyboard.isKeyPressed(cpu.getVRegister()[x])).thenReturn(true);
+                Mockito.when(keyboard.isKeyDown(cpu.getVRegister()[x])).thenReturn(true);
 
                 cpu.decodeAndExecuteInstruction();
 
@@ -846,7 +846,7 @@ class CPUTest {
                 int kk = 0x009E; // last 2 nibbles of instruction
                 int instruction = opcode + (x << 8) + kk;
                 cpu.setInstruction(instruction);
-                Mockito.when(keyboard.isKeyPressed(cpu.getVRegister()[x])).thenReturn(false);
+                Mockito.when(keyboard.isKeyDown(cpu.getVRegister()[x])).thenReturn(false);
 
                 cpu.decodeAndExecuteInstruction();
 
@@ -863,7 +863,7 @@ class CPUTest {
                 int kk = 0x00A1; // last 2 nibbles of instruction
                 int instruction = opcode + (x << 8) + kk;
                 cpu.setInstruction(instruction);
-                Mockito.when(keyboard.isKeyPressed(cpu.getVRegister()[x])).thenReturn(false);
+                Mockito.when(keyboard.isKeyDown(cpu.getVRegister()[x])).thenReturn(false);
 
                 cpu.decodeAndExecuteInstruction();
 
@@ -880,7 +880,7 @@ class CPUTest {
                 int kk = 0x00A1; // last 2 nibbles of instruction
                 int instruction = opcode + (x << 8) + kk;
                 cpu.setInstruction(instruction);
-                Mockito.when(keyboard.isKeyPressed(cpu.getVRegister()[x])).thenReturn(true);
+                Mockito.when(keyboard.isKeyDown(cpu.getVRegister()[x])).thenReturn(true);
 
                 cpu.decodeAndExecuteInstruction();
 
