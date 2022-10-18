@@ -102,4 +102,17 @@ class KeyboardTest {
 
         assertFalse(keyboard.getKeys()[indexOfAKey]);
     }
+
+    @Test
+    @DisplayName("Should return the value of the downed key")
+    void getDownedKeyValue() {
+        keyboard.getKeys()[0xF] = true;
+        assertEquals(0xF, keyboard.getDownedKeyValue());
+    }
+
+    @Test
+    @DisplayName("Should return -1 if no keys are down")
+    void getDownedKeyValue_noneDown() {
+        assertEquals(-1, keyboard.getDownedKeyValue());
+    }
 }

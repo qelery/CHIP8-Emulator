@@ -8,28 +8,28 @@ import javafx.scene.input.KeyCode;
  * The machines that originally ran CHIP-8 used a 16-key hexadecimal
  * keypad with the following layout:
  * <p>
- *   -----------------<br>
- *   | 1 | 2 | 3 | C |<br>
- *   -----------------<br>
- *   | 4 | 5 | 6 | D |<br>
- *   ------------------<br>
- *   | 7 | 8 | 9 | E |<br>
- *   ------------------<br>
- *   | A | 0 | B | F |<br>
- *   ------------------<br>
+ * -----------------<br>
+ * | 1 | 2 | 3 | C |<br>
+ * -----------------<br>
+ * | 4 | 5 | 6 | D |<br>
+ * ------------------<br>
+ * | 7 | 8 | 9 | E |<br>
+ * ------------------<br>
+ * | A | 0 | B | F |<br>
+ * ------------------<br>
  * <p>
  * Those keys have been mapped to the following layout on a standard
  * keyboard:
  * <p>
- *   -----------------<br>
- *   | 1 | 2 | 3 | 4 |<br>
- *   -----------------<br>
- *   | Q | W | E | R |<br>
- *   ------------------<br>
- *   | A | S | D | F |<br>
- *   ------------------<br>
- *   | Z | X | C | V |<br>
- *   ------------------<br>
+ * -----------------<br>
+ * | 1 | 2 | 3 | 4 |<br>
+ * -----------------<br>
+ * | Q | W | E | R |<br>
+ * ------------------<br>
+ * | A | S | D | F |<br>
+ * ------------------<br>
+ * | Z | X | C | V |<br>
+ * ------------------<br>
  */
 public class Keyboard {
 
@@ -86,6 +86,17 @@ public class Keyboard {
         }
     }
 
+    public int getDownedKeyValue() {
+        int minKeyValue = 0x1;
+        int maxKeyValue = 0xF;
+        for (int i = minKeyValue; i <= maxKeyValue; i++) {
+            if (isKeyDown(i)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public boolean isKeyDown(int keyVal) {
         return keys[keyVal];
     }
@@ -96,11 +107,12 @@ public class Keyboard {
 
     public void printControls() {
         String keyMappingsLayout = """
-                        YOUR KEYBOARD CONTROLS:        ORIGINAL CHIP-8 LAYOUT:
-                              1  2  3  4                    1  2  3  C
-                              Q  W  E  R                    4  5  6  D
-                              A  S  D  F                    7  8  9  E
-                              Z  X  C  V                    A  0  B  F""";
+                YOUR KEYBOARD CONTROLS:        ORIGINAL CHIP-8 LAYOUT:
+                      1  2  3  4                    1  2  3  C
+                      Q  W  E  R                    4  5  6  D
+                      A  S  D  F                    7  8  9  E
+                      Z  X  C  V                    A  0  B  F
+                """;
         System.out.println(keyMappingsLayout);
     }
 
