@@ -515,7 +515,8 @@ class CPUTest {
 
                 cpu.decodeAndExecuteInstruction();
 
-                assertEquals(initialVRegisterXValue - initialVRegisterYValue, cpu.getVRegister()[x]);
+                int expectedVRegisterXValue = (initialVRegisterXValue - initialVRegisterYValue) & 0x00FF;
+                assertEquals(expectedVRegisterXValue, cpu.getVRegister()[x]);
             }
 
             @Test
@@ -719,14 +720,14 @@ class CPUTest {
         }
 
         @Test
-        @DisplayName("Opcode 9 - should skip next instruction if VRegister[x] does not equal VRegister[y]")
+        @DisplayName("Opcode 9 - should skip next instruction if n equals 0 and VRegister[x] does not equal VRegister[y]")
         void decodeAndExecuteInstruction_opcode9_shouldConditionallySkipNextInstruction() {
             int startingPC = 5;
             cpu.setPc(startingPC);
             int opcode = 0x9000; // first nibble of instruction
             int x = 2; // second nibble of instruction
             int y = 3; // third nibble of instruction
-            int n = 7; // last nibble of instruction
+            int n = 0; // last nibble of instruction
             int instruction = opcode + (x << 8) + (y << 4) + n;
             cpu.setInstruction(instruction);
             int initialVRegisterXValue = 0x0055;

@@ -2,6 +2,11 @@ package com.qelery.chip8;
 
 public class Memory {
 
+    /**
+     * Skip the first 512 bytes of memory. In the original CHIP-8 they
+     * held the interpreter in the original CHIP-8.
+     */
+    public static final int READ_START_LOCATION = 512;
     private final int[] RAM;
 
     /**

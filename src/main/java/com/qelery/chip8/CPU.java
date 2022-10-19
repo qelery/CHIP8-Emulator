@@ -2,20 +2,87 @@ package com.qelery.chip8;
 
 import java.util.Random;
 
+/**
+ * A class to create an emulated cpu for fetching, decoding, and executing
+ * instructions from a CHIP-8 ROM.<p>
+ *
+ * <h2>References</h2>
+ * <a href="http://devernay.free.fr/hacks/chip8/C8TECH10.HTM">Cowgod's Chip-8 Technical Reference</a><br>
+ * <a href="http://www.cs.columbia.edu/~sedwards/classes/2016/4840-spring/designs/Chip8.pdf">Columbia University - Chip-8 Design Specification</a><br>
+ * <a href="https://en.wikipedia.org/wiki/CHIP-8">Wikipedia - CHIP-8</a><br>
+ */
 public class CPU {
 
-    private final int clockSpeed; // hertz
+    /**
+     * The clock speed of the CPU in  hertz.
+     */
+    private final int clockSpeed;
 
+    /**
+     * A decrementing timer. Its value is used to set vRegisters on some
+     * instructions.
+     */
     private int delayTimer;
+
+    /**
+     * A decrementing, non-zero timer which causes CHIP-8 to buzz when its
+     * value is non-zero.
+     */
     private int soundTimer;
+
+    /**
+     * The next instruction that the CPU will execute.
+     */
     private int instruction;
 
+    /**
+     * Represents 16, 8-bit unsigned registers.<p>
+     * <p>
+     * Uses an integer type for simplicity since Java does not have
+     * unsigned number types.
+     */
     private final int[] VRegister;
-    private final int[] stack;
-    private int IRegister;
-    private int sp; // stack pointer
-    private int pc; // program counter
 
+    /**
+     * Represents an array of 16, 16-bit unsigned values used to store
+     * the address that the interpreter should return to when finished
+     * with a subroutine.<p>
+     * <p>
+     * Uses an integer type for simplicity since Java does not have
+     * unsigned number types.
+     */
+    private final int[] stack;
+
+    /**
+     * Represents a 16-bit register. This register is generally used to
+     * store memory addresses. Only the lowest 12 big are usually used.<p>
+     * <p>
+     * Uses an integer type for simplicity since Java does not have
+     * unsigned number types.
+     */
+    private int IRegister;
+
+    /**
+     * Represents an 8-bit point used to point to the top of the stack.<p>
+     * <p>
+     * Uses an integer type for simplicity since Java does not have
+     * unsigned number types.
+     */
+    private int sp;
+
+    /**
+     * Represents an 8-bit point used to store the currently executing
+     * address.<p>
+     * <p>
+     * Uses an integer type for simplicity since Java does not have
+     * unsigned number types.
+     */
+    private int pc;
+
+    /**
+     * A flag which is used to determine if CHIP-8 should render the
+     * screen.
+     */
     private boolean drawFlag;
 
     private final Memory memory;
@@ -24,12 +91,9 @@ public class CPU {
     private final Keyboard keyboard;
     private final Random random;
 
-    /**
-     * Creates an emulated cpu for fetching, decoding, and executing instructions from a CHIP-8 ROM.
-     */
     public CPU(int clockSpeed, Memory memory, Screen screen, Sound sound, Keyboard keyboard) {
         this.clockSpeed = clockSpeed;
-        this.pc = 512; // the first 512 bytes held the interpreter in the original CHIP-8
+        this.pc = Memory.READ_START_LOCATION;
         this.VRegister = new int[16];
         this.stack = new int[16];
         this.drawFlag = false;
@@ -77,14 +141,19 @@ public class CPU {
     }
 
     /**
-     * Decodes and executes a 2-byte instruction. Notation for the decoded cpu instructions:
+     * Decodes and executes a 2-byte instruction. Notation for the decoded CPU instructions:<p>
      *
-     * ■ ■ ■ ■ - 4-nibble hexadecimal representation of the 2-byte instruction
-     * nnn - the lowest 3 nibbles of the instruction (■ a d r) or (■ n n n)
-     * n - the lowest nibble of the instruction (■ ■ ■ n)
-     * x - the lower nibble of the high byte of the instruction (■ x ■ ■)
-     * y - the higher nibble of the low byte of the instruction (■ ■ y ■)
-     * kk - the lowest 2 nibbles of the instruction (■ ■ k k)
+     * <h2>CPU instruction notation</h2>
+     * Adapted from: <a href="http://devernay.free.fr/hacks/chip8/C8TECH10.HTM">Cowgod's Chip-8 Technical Reference</a><p>
+     * <p>
+     * ■ ■ ■ ■ - 4-nibble hexadecimal representation of the 2-byte instruction<p>
+     * opcode - represents the highest nibble of the instruction (o ■ ■ ■)<br>
+     * nnn - represents the lowest 3 nibbles of the instruction (■ n n n)<br>
+     * n - represents the lowest nibble of the instruction (■ ■ ■ n)<br>
+     * x - represents the lower nibble of the higher byte of the instruction (■ x ■ ■)<br>
+     * y - represents the higher nibble of the lower byte of the instruction (■ ■ y ■)<br>
+     * kk - represents the lowest 2 nibbles of the instruction (■ ■ k k)<br>
+     * <p>
      */
     protected void decodeAndExecuteInstruction() {
         int opcode = instruction >> 12 & 0x00F;
@@ -109,7 +178,7 @@ public class CPU {
             sp--;
             return;
         }
-        switch(opcode) {
+        switch (opcode) {
 
             case 0x1:
                 // 1nnn
@@ -143,7 +212,7 @@ public class CPU {
 
             case 0x5:
                 // 5xy0
-                // conditional skip next instruction
+                // Skip next instruction if Vx = Vy and n = 0
                 if (n == 0) {
                     if (VRegister[x] == VRegister[y]) {
                         incrementPC();
@@ -163,7 +232,7 @@ public class CPU {
                 int result = VRegister[x] + kk;
                 // resolve overflow - original V registers where 8-bit unsigned
                 if (result >= 256) {
-                    VRegister[x] = result - 256;
+                    VRegister[x] = result & 0x00FF;
                 } else {
                     VRegister[x] = result;
                 }
@@ -216,7 +285,7 @@ public class CPU {
                         } else {
                             VRegister[0xF] = 0;
                         }
-                        VRegister[x] -= VRegister[y];
+                        VRegister[x] = (VRegister[x] - VRegister[y]) & 0x00FF;
                         return;
 
                     case 6:
@@ -224,7 +293,7 @@ public class CPU {
                         // Set Vx = Vx SHR 1
                         int leastSignificantBit = VRegister[x] & 1;
                         VRegister[0xF] = leastSignificantBit;
-                        VRegister[x] >>= 1;
+                        VRegister[x] >>>= 1;
                         return;
 
                     case 7:
@@ -243,14 +312,14 @@ public class CPU {
                         // Set Vx = Vx SHL 1
                         int mostSignificantBit = VRegister[x] >> 7;
                         VRegister[0xF] = mostSignificantBit;
-                        VRegister[x] <<= 1;
+                        VRegister[x] = (VRegister[x] << 1) & 0x00FF;
                         return;
                 }
 
 
             case 0x9:
                 // 9xy0
-                // Skip next instruction if Vx != Vy
+                // Skip next instruction if Vx != Vy and n = 0
                 if (n == 0) {
                     if (VRegister[x] != VRegister[y]) {
                         incrementPC();
@@ -292,7 +361,7 @@ public class CPU {
                         int xCoord = VRegister[x] + xLine;
                         xCoord = xCoord % Screen.NUM_PIXEL_COLUMNS;
                         int previousPixelVal = screen.getPixel(xCoord, yCoord);
-                        int newPixelVal = previousPixelVal ^ (1 & (spriteByte >> 7-xLine));
+                        int newPixelVal = previousPixelVal ^ (1 & (spriteByte >> 7 - xLine));
                         screen.setPixel(xCoord, yCoord, newPixelVal);
 
                         if (previousPixelVal == 1 && newPixelVal == 0) {
@@ -305,7 +374,7 @@ public class CPU {
 
             case 0xE:
 
-                switch(kk) {
+                switch (kk) {
 
                     case 0x9E:
                         //Ex9E
@@ -338,6 +407,17 @@ public class CPU {
                     case 0x0A:
                         // Fx0A
                         // Wait for a key press, store the value of the key in Vx
+//                        int pressedKey = keyboard.getPressedKey();
+//                        while (pressedKey == 0) {
+//                            try {
+//                                Thread.sleep(300);
+//                            } catch (InterruptedException e) {
+//                                e.printStackTrace();
+//                            }
+//                            pressedKey = keyboard.getPressedKey();
+//                        }
+//                        keyboard.forceKeyRelease(pressedKey);
+//                        VRegister[x] = pressedKey;
                         for (int i = 0x0; i < 0xF; i++) {
                             if (keyboard.isKeyPressed(i)) {
                                 VRegister[x] = i;
@@ -364,7 +444,8 @@ public class CPU {
                     case 0x1E:
                         // Fx1E
                         // Set I = I + Vx
-                        IRegister += VRegister[x];
+                        // Only the lowest 12 bits of the IRegister are used
+                        IRegister = (IRegister + VRegister[x]) & 0xFFF;
                         return;
 
                     case 0x29:
