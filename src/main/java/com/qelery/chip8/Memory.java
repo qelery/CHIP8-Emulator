@@ -1,17 +1,22 @@
 package com.qelery.chip8;
 
+/**
+ * A Memory object where the font sprite and ROM data are loaded.
+ *<p>
+ * CHIP-8 was most commonly implemented on microcomputers that had
+ * 4KB RAM. The first 512 bytes were used by the original CHIP-8
+ * interpreter and should not be used by programs.
+ * <p>
+ * <h2>References</h2>
+ * <a href="http://devernay.free.fr/hacks/chip8/C8TECH10.HTM">Cowgod's Chip-8 Technical Reference</a><br>
+ * <a href="https://en.wikipedia.org/wiki/CHIP-8">Wikipedia - CHIP-8</a><br>
+ */
 public class Memory {
 
     private final int[] RAM;
 
     /**
-     * Creates a Memory object where the font sprite and ROM data are loaded.
-     *
-     * The original CHIP-8 interpreter was usually implemented on microcomputers
-     * that had 4096 memory locations of RAM.
-     *
-     * @param size
-     *              the number of memory locations
+     * Creates a Memory object that serves as the CHIP-8 RAM.
      */
     public Memory(int size) {
         this.RAM = new int[size];
