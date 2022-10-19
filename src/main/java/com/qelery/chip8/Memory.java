@@ -56,7 +56,7 @@ public class Memory {
         return RAM[address] & 0xFF;
     }
 
-    public void writeByte(int address, int value) {
+    public void writeByte(int value, int address) {
         RAM[address] = value;
     }
 }

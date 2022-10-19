@@ -380,16 +380,16 @@ public class CPU {
                         int onesDigitOfVx = VRegister[x] % 10;
                         int tensDigitOfVx = VRegister[x] % 100 / 10;
                         int hundredsDigitOfVx = VRegister[x] % 1000 / 100;
-                        memory.writeByte(IRegister, hundredsDigitOfVx);
-                        memory.writeByte(IRegister + 1, tensDigitOfVx);
-                        memory.writeByte(IRegister + 2, onesDigitOfVx);
+                        memory.writeByte(hundredsDigitOfVx, IRegister);
+                        memory.writeByte(tensDigitOfVx, IRegister + 1);
+                        memory.writeByte(onesDigitOfVx, IRegister + 2);
                         return;
 
                     case 0x55:
                         // Fx55
                         // Stores registers V0 through Vx in memory starting at location I
                         for (int i = 0; i < x + 1; i++) {
-                            memory.writeByte(IRegister + i, VRegister[i]);
+                            memory.writeByte(VRegister[i], IRegister + i);
                         }
                         return;
 

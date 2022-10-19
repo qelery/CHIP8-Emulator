@@ -988,9 +988,9 @@ class CPUTest {
 
                 cpu.decodeAndExecuteInstruction();
 
-                Mockito.verify(memory, Mockito.times(1)).writeByte(initialIRegisterValue, initialVRegisterXValue % 1000 / 100);
-                Mockito.verify(memory, Mockito.times(1)).writeByte(initialIRegisterValue + 1, initialVRegisterXValue % 100 / 10);
-                Mockito.verify(memory, Mockito.times(1)).writeByte(initialIRegisterValue + 2, initialVRegisterXValue % 10);
+                Mockito.verify(memory, Mockito.times(1)).writeByte(initialVRegisterXValue % 1000 / 100, initialIRegisterValue);
+                Mockito.verify(memory, Mockito.times(1)).writeByte(initialVRegisterXValue % 100 / 10, initialIRegisterValue + 1);
+                Mockito.verify(memory, Mockito.times(1)).writeByte(initialVRegisterXValue % 10, initialIRegisterValue + 2);
             }
 
             @Test
