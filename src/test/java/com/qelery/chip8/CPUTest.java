@@ -110,7 +110,7 @@ class CPUTest {
 
         Opcode expectedOpcode = new Opcode(0x1210);
         assertEquals(expectedOpcode, cpu.getOpcode());
-        assertEquals(expectedOpcode.intValue(), cpu.getOpcode().intValue());
+        assertEquals(expectedOpcode.fullValue(), cpu.getOpcode().fullValue());
     }
 
     @Test
@@ -898,7 +898,7 @@ class CPUTest {
             @Test
             @DisplayName("Opcode = F, kk = 07 - should set VRegister[x] to delay timer")
             void executeInstruction_opcodeF_kk07_shouldSetVRegisterToDelayTimer() {
-                int opcode = 0xE; // first nibble of instruction
+                int opcode = 0xF; // first nibble of instruction
                 int x = 0x07; // second nibble of instruction
                 int kk = 0x0007; // last 2 nibbles of instruction
                 int instruction = (opcode << 12) + (x << 8) + kk;

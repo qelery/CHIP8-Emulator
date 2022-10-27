@@ -77,7 +77,7 @@ class OpcodeTest {
     void intValue() {
         int expectedIntValue = (nibble1 << 12) + (nibble2 << 8) + (nibble3 << 4) + nibble4;
 
-        assertEquals(expectedIntValue, opcode.intValue());
+        assertEquals(expectedIntValue, opcode.fullValue());
     }
 
     @Test

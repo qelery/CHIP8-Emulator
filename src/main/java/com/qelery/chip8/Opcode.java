@@ -47,8 +47,6 @@ public class Opcode {
     }
 
     /**
-     * Returns the first nibble of the opcode.
-     *
      * @return the first nibble of the opcode
      */
     public int o() {
@@ -56,10 +54,6 @@ public class Opcode {
     }
 
     /**
-     * Returns the second nibble of the opcode.
-     * <p>
-     * The notation 'x' comes from the CHIP-8's technical reference.
-     *
      * @return the second nibble of the opcode
      */
     public int x() {
@@ -67,10 +61,6 @@ public class Opcode {
     }
 
     /**
-     * Returns the third nibble of the opcode.
-     * <p>
-     * The notation 'y' comes from the CHIP-8's technical reference.
-     *
      * @return the third nibble of the opcode
      */
     public int y() {
@@ -78,10 +68,6 @@ public class Opcode {
     }
 
     /**
-     * Returns the fourth nibble of the opcode.
-     * <p>
-     * The notation 'n' comes from the CHIP-8's technical reference.
-     *
      * @return the fourth nibble of the opcode
      */
     public int n() {
@@ -89,10 +75,6 @@ public class Opcode {
     }
 
     /**
-     * Returns the last two nibbles of the opcode.
-     * <p>
-     * The notation 'kk' comes from the CHIP-8's technical reference.
-     *
      * @return the last two nibbles of the opcode
      */
     public int kk() {
@@ -100,10 +82,6 @@ public class Opcode {
     }
 
     /**
-     * Returns the last three nibbles of the opcode.
-     * <p>
-     * The notation 'nnn' comes from the CHIP-8's technical reference.
-     *
      * @return the last three nibbles of the opcode
      */
     public int nnn() {
@@ -111,11 +89,9 @@ public class Opcode {
     }
 
     /**
-     * Returns the integer equivalent of the opcode.
-     *
      * @return the integer equivalent of the opcode
      */
-    public int intValue() {
+    public int fullValue() {
         return instruction;
     }
 
