@@ -154,17 +154,19 @@ public class CPU {
                     case 0x6 -> op_8XY6_rightBitShift();
                     case 0x7 -> op_8XY7_subtractRegister();
                     case 0xE -> op_8XYE_leftBitShift();
+                    default -> System.out.printf("Unknown opcode: 0x%x%n%n", this.opcode.fullValue());
                 }
             }
             case 0x9 -> op_9XY0_skipIfRegistersNotEqual();
             case 0xA -> op_ANNN_setIRegister();
             case 0xB -> op_BNNN_jumpToLocation();
             case 0xC -> op_CXKK_setRegisterToRandom();
-            case 0xD -> op_DXYN_displaySprite();
+            case 0xD -> op_DXYN_drawSprite();
             case 0xE -> {
                 switch (opcode.kk()) {
                     case 0x9E -> op_EX9E_skipIfKeyPressed();
                     case 0xA1 -> op_EXA1_skipIfKeyNotPressed();
+                    default -> System.out.printf("Unknown opcode: 0x%x%n%n", this.opcode.fullValue());
                 }
             }
             case 0xF -> {
@@ -178,9 +180,10 @@ public class CPU {
                     case 0x33 -> op_FX33_storeBCD();
                     case 0x55 -> op_FX55_storeRegisterInMemory();
                     case 0x65 -> op_FX65_readRegistersFromMemory();
+                    default -> System.out.printf("Unknown opcode: 0x%x%n%n", this.opcode.fullValue());
                 }
             }
-            default -> System.out.printf("Unknown opcode: 0x%x\n%n", this.opcode.fullValue());
+            default -> System.out.printf("Unknown opcode: 0x%x%n%n", this.opcode.fullValue());
         }
     }
 
@@ -373,10 +376,9 @@ public class CPU {
     /**
      * Display n-byte sprite starting at memory location I at (Vx, Vy), set VF = collision
      */
-    private void op_DXYN_displaySprite() {
+    private void op_DXYN_drawSprite() {
         VRegister[0xF] = 0;
 
-        // TODO: Can more of this logic be moved to the Screen class?
         for (int yLine = 0; yLine < opcode.n(); yLine++) {
 
             int spriteByte = memory.readByte(IRegister + yLine);
