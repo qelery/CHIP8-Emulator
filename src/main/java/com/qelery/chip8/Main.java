@@ -123,7 +123,7 @@ public class Main extends Application {
         while (true) {
             System.out.println("Game to load from the ROMS directory? ");
             String fileName = scanner.nextLine();
-            Path fileLocation = Paths.get("src/main/resources/ROMS/" + fileName);
+            Path fileLocation = Paths.get("src/main/resources/ROMS/" + fileName.toUpperCase());
             try {
                 byte[] byteArray = Files.readAllBytes(fileLocation);
                 memory.loadData(byteArray, 0x200);

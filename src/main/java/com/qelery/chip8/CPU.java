@@ -2,20 +2,72 @@ package com.qelery.chip8;
 
 import java.util.Random;
 
+/**
+ * A class to create an emulated cpu for fetching, decoding, and executing
+ * instructions from a CHIP-8 ROM.
+ * <p>
+ * <h2>References</h2>
+ * <a href="http://devernay.free.fr/hacks/chip8/C8TECH10.HTM">Cowgod's Chip-8 Technical Reference</a><br>
+ * <a href="http://www.cs.columbia.edu/~sedwards/classes/2016/4840-spring/designs/Chip8.pdf">Columbia University - Chip-8 Design Specification</a><br>
+ * <a href="https://en.wikipedia.org/wiki/CHIP-8">Wikipedia - CHIP-8</a><br>
+ */
 public class CPU {
 
-    private final int clockSpeed; // hertz
+    /**
+     * The clock speed of the CPU in  hertz.
+     */
+    private final int clockSpeed;
 
+    /**
+     * A decrementing timer. Its value is used to set vRegisters on some
+     * instructions.
+     */
     private int delayTimer;
+
+    /**
+     * A decrementing, non-zero timer which causes CHIP-8 to buzz when its
+     * value is non-zero.
+     */
     private int soundTimer;
-    private int instruction;
 
+    /**
+     * The next opcode that the CPU will execute.
+     */
+    private Opcode opcode;
+
+    /**
+     * Represents 16, 8-bit unsigned registers.
+     */
     private final int[] VRegister;
-    private final int[] stack;
-    private int IRegister;
-    private int sp; // stack pointer
-    private int pc; // program counter
 
+    /**
+     * Represents an array of 16, 16-bit unsigned values used to store
+     * the address that the interpreter should return to when finished
+     * with a subroutine.
+     */
+    private final int[] stack;
+
+    /**
+     * Represents a 16-bit register. This register is generally used to
+     * store memory addresses. Only the lowest 12 big are usually used.
+     */
+    private int IRegister;
+
+    /**
+     * Represents an 8-bit point used to point to the top of the stack.
+     */
+    private int sp;
+
+    /**
+     * Represents an 8-bit program counter used to store the currently executing
+     * address.
+     */
+    private int pc;
+
+    /**
+     * A flag which is used to determine if CHIP-8 should render the
+     * screen.
+     */
     private boolean drawFlag;
 
     private final Memory memory;
@@ -24,12 +76,9 @@ public class CPU {
     private final Keyboard keyboard;
     private final Random random;
 
-    /**
-     * Creates an emulated cpu for fetching, decoding, and executing instructions from a CHIP-8 ROM.
-     */
     public CPU(int clockSpeed, Memory memory, Screen screen, Sound sound, Keyboard keyboard) {
         this.clockSpeed = clockSpeed;
-        this.pc = 512; // the first 512 bytes held the interpreter in the original CHIP-8
+        this.pc = Memory.READ_START_LOCATION;
         this.VRegister = new int[16];
         this.stack = new int[16];
         this.drawFlag = false;
@@ -62,348 +111,393 @@ public class CPU {
     public void emulateCycle() {
         fetchInstruction();
         incrementPC();
-        decodeAndExecuteInstruction();
+        executeInstruction();
     }
-
 
     protected void fetchInstruction() {
         int firstByte = memory.readByte(pc);
         int secondByte = memory.readByte(pc + 1);
-        instruction = ((firstByte << 8) & 0xFF00) | (secondByte & 0x00FF); // ensure unsigned
+        this.opcode = new Opcode(firstByte, secondByte);
     }
 
     protected void incrementPC() {
         pc += 2;
     }
 
+    protected void executeInstruction() {
+        if (this.opcode.fullValue() == 0x00E0) {
+            clearScreen_0x00E0();
+            return;
+        }
+
+        if (this.opcode.fullValue() == 0x00EE) {
+            returnFromSubroutine_0x00EE();
+            return;
+        }
+
+        switch (opcode.o()) {
+            case 0x1 -> op_1NNN_jumpToLocation();
+            case 0x2 -> op_2NNN_callSubroutine();
+            case 0x3 -> op_3XKK_skipIfRegisterEqualsValue();
+            case 0x4 -> op_4XKK_skipIfRegisterNotEqualValue();
+            case 0x5 -> op_5XY0_skipIfRegistersEqual();
+            case 0x6 -> op_6XKK_setValueToRegister();
+            case 0x7 -> op_7XKK_addValueToRegister();
+            case 0x8 -> {
+                switch (opcode.n()) {
+                    case 0x0 -> op_8XY0_setRegistersEqual();
+                    case 0x1 -> op_8XY1_bitwiseOr();
+                    case 0x2 -> op_8XY2_bitwiseAnd();
+                    case 0x3 -> op_8XY3_exclusiveOr();
+                    case 0x4 -> op_8XY4_sumRegisters();
+                    case 0x5 -> op_8XY5_subtractRegister();
+                    case 0x6 -> op_8XY6_rightBitShift();
+                    case 0x7 -> op_8XY7_subtractRegister();
+                    case 0xE -> op_8XYE_leftBitShift();
+                    default -> System.out.printf("Unknown opcode: 0x%x%n%n", this.opcode.fullValue());
+                }
+            }
+            case 0x9 -> op_9XY0_skipIfRegistersNotEqual();
+            case 0xA -> op_ANNN_setIRegister();
+            case 0xB -> op_BNNN_jumpToLocation();
+            case 0xC -> op_CXKK_setRegisterToRandom();
+            case 0xD -> op_DXYN_drawSprite();
+            case 0xE -> {
+                switch (opcode.kk()) {
+                    case 0x9E -> op_EX9E_skipIfKeyPressed();
+                    case 0xA1 -> op_EXA1_skipIfKeyNotPressed();
+                    default -> System.out.printf("Unknown opcode: 0x%x%n%n", this.opcode.fullValue());
+                }
+            }
+            case 0xF -> {
+                switch (opcode.kk()) {
+                    case 0x07 -> op_FX07_setRegisterToDelayTimer();
+                    case 0x0A -> op_FX0A_waitForKeyPress();
+                    case 0x15 -> op_FX15_setDelayTimerToRegister();
+                    case 0x18 -> op_FX18_setSoundTimerToValue();
+                    case 0x1E -> op_FX1E_addToIRegister();
+                    case 0x29 -> op_FX29_loadSprite();
+                    case 0x33 -> op_FX33_storeBCD();
+                    case 0x55 -> op_FX55_storeRegisterInMemory();
+                    case 0x65 -> op_FX65_readRegistersFromMemory();
+                    default -> System.out.printf("Unknown opcode: 0x%x%n%n", this.opcode.fullValue());
+                }
+            }
+            default -> System.out.printf("Unknown opcode: 0x%x%n%n", this.opcode.fullValue());
+        }
+    }
+
     /**
-     * Decodes and executes a 2-byte instruction. Notation for the decoded cpu instructions:
-     *
-     * ■ ■ ■ ■ - 4-nibble hexadecimal representation of the 2-byte instruction
-     * nnn - the lowest 3 nibbles of the instruction (■ a d r) or (■ n n n)
-     * n - the lowest nibble of the instruction (■ ■ ■ n)
-     * x - the lower nibble of the high byte of the instruction (■ x ■ ■)
-     * y - the higher nibble of the low byte of the instruction (■ ■ y ■)
-     * kk - the lowest 2 nibbles of the instruction (■ ■ k k)
+     * Clear the display
      */
-    protected void decodeAndExecuteInstruction() {
-        int opcode = instruction >> 12 & 0x00F;
-        int x = instruction >> 8 & 0x00F;
-        int y = instruction >> 4 & 0x00F;
-        int n = instruction & 0x00F;
-        int nnn = instruction & 0xFFF;
-        int kk = instruction & 0xFF;
+    private void clearScreen_0x00E0() {
+        screen.clear();
+        drawFlag = true;
+    }
 
-        if (instruction == 0x00E0) {
-            // 00E0
-            // Clear the display
-            screen.clear();
-            drawFlag = true;
-            return;
+    /**
+     * Return from a subroutine
+     */
+    private void returnFromSubroutine_0x00EE() {
+        pc = stack[sp];
+        sp--;
+    }
+
+    /**
+     * Jump to location nnn
+     */
+    private void op_1NNN_jumpToLocation() {
+        pc = opcode.nnn();
+    }
+
+    /**
+     * Call subroutine at nnn
+     */
+    private void op_2NNN_callSubroutine() {
+        sp++;
+        stack[sp] = pc;
+        pc = opcode.nnn();
+    }
+
+    /**
+     * Skip next instruction if Vx = kk
+     */
+    private void op_3XKK_skipIfRegisterEqualsValue() {
+        if (VRegister[opcode.x()] == opcode.kk()) {
+            incrementPC();
         }
+    }
 
-        if (instruction == 0x00EE) {
-            // 00EE
-            // Return from a subroutine
-            pc = stack[sp];
-            sp--;
-            return;
+    /**
+     * Skip next instruction if Vx != kk
+     */
+    private void op_4XKK_skipIfRegisterNotEqualValue() {
+        if (VRegister[opcode.x()] != opcode.kk()) {
+            incrementPC();
         }
-        switch(opcode) {
+    }
 
-            case 0x1:
-                // 1nnn
-                // Jump to location nnn
-                pc = nnn;
-                return;
+    /**
+     * Skip next instruction if Vx = Vy and n = 0
+     */
+    private void op_5XY0_skipIfRegistersEqual() {
+        if (VRegister[opcode.x()] == VRegister[opcode.y()] && opcode.n() == 0) {
+            incrementPC();
+        }
+    }
 
-            case 0x2:
-                // 2nnn
-                // call subroutine at address
-                sp++;
-                stack[sp] = pc;
-                pc = nnn;
-                return;
+    /**
+     * Set Vx = kk
+     */
+    private void op_6XKK_setValueToRegister() {
+        VRegister[opcode.x()] = opcode.kk();
+    }
 
-            case 0x3:
-                // 3xkk
-                // Skip next instruction if Vx = kk
-                if (VRegister[x] == kk) {
-                    incrementPC();
+    /**
+     * Set Vx = Vx + kk
+     */
+    private void op_7XKK_addValueToRegister() {
+        int result = VRegister[opcode.x()] + opcode.kk();
+        if (result >= 256) {
+            VRegister[opcode.x()] = result & 0x00FF;
+        } else {
+            VRegister[opcode.x()] = result;
+        }
+    }
+
+    /**
+     * Set Vx = Vy
+     */
+    private void op_8XY0_setRegistersEqual() {
+        VRegister[opcode.x()] = VRegister[opcode.y()];
+    }
+
+    /**
+     * Set Vx = Vx OR Vy
+     */
+    private void op_8XY1_bitwiseOr() {
+        VRegister[opcode.x()] |= VRegister[opcode.y()];
+    }
+
+    private void op_8XY2_bitwiseAnd() {
+        VRegister[opcode.x()] &= VRegister[opcode.y()];
+    }
+
+    /**
+     * Set Vx = XOR Vy
+     */
+    private void op_8XY3_exclusiveOr() {
+        VRegister[opcode.x()] ^= VRegister[opcode.y()];
+    }
+
+    /**
+     * Set Vx = Vx + Vy, set VF = carry
+     */
+    private void op_8XY4_sumRegisters() {
+        int sum = VRegister[opcode.x()] + VRegister[opcode.y()];
+        int sumsLowestByte = sum & 0xFF;
+        VRegister[opcode.x()] = sumsLowestByte;
+        VRegister[0xF] = sum > 0xFF ? 1 : 0;
+    }
+
+    /**
+     * Set Vx = Vx - Vy, set VF = NOT borrow
+     */
+    private void op_8XY5_subtractRegister() {
+        if (VRegister[opcode.x()] > VRegister[opcode.y()]) {
+            VRegister[0xF] = 1;
+        } else {
+            VRegister[0xF] = 0;
+        }
+        VRegister[opcode.x()] = (VRegister[opcode.x()] - VRegister[opcode.y()]) & 0x00FF;
+    }
+
+    /**
+     * Set Vx = Vx SHR 1
+     */
+    private void op_8XY6_rightBitShift() {
+        int leastSignificantBit = VRegister[opcode.x()] & 1;
+        VRegister[0xF] = leastSignificantBit;
+        VRegister[opcode.x()] >>>= 1;
+    }
+
+    /**
+     * Set Vx = Vy - Vx, set VF = NOT borrow
+     */
+    private void op_8XY7_subtractRegister() {
+        if (VRegister[opcode.y()] > VRegister[opcode.x()]) {
+            VRegister[0xF] = 1;
+        } else {
+            VRegister[0xF] = 0;
+        }
+        VRegister[opcode.x()] = VRegister[opcode.y()] - VRegister[opcode.x()];
+    }
+
+    /**
+     * Set Vx = Vx SHL 1
+     */
+    private void op_8XYE_leftBitShift() {
+        int mostSignificantBit = VRegister[opcode.x()] >> 7;
+        VRegister[0xF] = mostSignificantBit;
+        VRegister[opcode.x()] = (VRegister[opcode.x()] << 1) & 0x00FF;
+    }
+
+    /**
+     * Skip next instruction if Vx != Vy and n = 0
+     */
+    private void op_9XY0_skipIfRegistersNotEqual() {
+        if (VRegister[opcode.x()] != VRegister[opcode.y()] && opcode.n() == 0) {
+            incrementPC();
+        }
+    }
+
+    /**
+     * Set I = nnn
+     */
+    private void op_ANNN_setIRegister() {
+        IRegister = opcode.nnn();
+    }
+
+    /**
+     * Jump to location nnn + V0
+     */
+    private void op_BNNN_jumpToLocation() {
+        pc = VRegister[0] + opcode.nnn();
+    }
+
+    /**
+     * Set Vx = random byte AND kk
+     */
+    private void op_CXKK_setRegisterToRandom() {
+        int randomUnsignedByte = random.nextInt(266);
+        VRegister[opcode.x()] = randomUnsignedByte & opcode.kk();
+    }
+
+    /**
+     * Display n-byte sprite starting at memory location I at (Vx, Vy), set VF = collision
+     */
+    private void op_DXYN_drawSprite() {
+        VRegister[0xF] = 0;
+
+        for (int yLine = 0; yLine < opcode.n(); yLine++) {
+
+            int spriteByte = memory.readByte(IRegister + yLine);
+            int yCoord = VRegister[opcode.y()] + yLine;
+            yCoord = yCoord % Screen.NUM_PIXEL_ROWS;
+
+            for (int xLine = 0; xLine < 8; xLine++) {
+
+                int xCoord = VRegister[opcode.x()] + xLine;
+                xCoord = xCoord % Screen.NUM_PIXEL_COLUMNS;
+                int previousPixelVal = screen.getPixel(xCoord, yCoord);
+                int newPixelVal = previousPixelVal ^ (1 & (spriteByte >> 7 - xLine));
+                screen.setPixel(xCoord, yCoord, newPixelVal);
+
+                if (previousPixelVal == 1 && newPixelVal == 0) {
+                    VRegister[0xF] = 1;
                 }
+            }
+        }
+        drawFlag = true;
+    }
+
+    /**
+     * Skip next instruction if key with the value of Vx is pressed
+     */
+    private void op_EX9E_skipIfKeyPressed() {
+        if (keyboard.isKeyDown(VRegister[opcode.x()])) {
+            incrementPC();
+        }
+    }
+
+    /**
+     * Skip next instruction if key with the value of Vx is not pressed
+     */
+    private void op_EXA1_skipIfKeyNotPressed() {
+        if (!keyboard.isKeyDown(VRegister[opcode.x()])) {
+            incrementPC();
+        }
+    }
+
+    /**
+     * Set Vx = delay timer value
+     */
+    private void op_FX07_setRegisterToDelayTimer() {
+        VRegister[opcode.x()] = delayTimer;
+    }
+
+    /**
+     * Wait for a key press, store the value of the key in Vx
+     */
+    private void op_FX0A_waitForKeyPress() {
+        for (int i = 0x0; i < 0xF; i++) {
+            if (keyboard.isKeyDown(i)) {
+                VRegister[opcode.x()] = i;
+                keyboard.forceKeyUp(i);
                 return;
+            }
+        }
+        // Rather than suspending the thread, the CPU is simply not advanced
+        // to the next instruction
+        pc -= 2;
+    }
 
-            case 0x4:
-                // 4xkk
-                // Skip next instruction if Vx != kk
-                if (VRegister[x] != kk) {
-                    incrementPC();
-                }
-                return;
+    /**
+     * Set the delay timer = Vx
+     */
+    private void op_FX15_setDelayTimerToRegister() {
+        delayTimer = VRegister[opcode.x()];
+    }
 
-            case 0x5:
-                // 5xy0
-                // conditional skip next instruction
-                if (n == 0) {
-                    if (VRegister[x] == VRegister[y]) {
-                        incrementPC();
-                    }
-                    return;
-                }
+    /**
+     * Set sound timer = Vx
+     */
+    private void op_FX18_setSoundTimerToValue() {
+        soundTimer = VRegister[opcode.x()];
+    }
 
-            case 0x6:
-                // 6xkk
-                // Set Vx = kk
-                VRegister[x] = kk;
-                return;
+    /**
+     * Only the lowest 12 bits of the IRegister are used
+     */
+    private void op_FX1E_addToIRegister() {
+        IRegister = (IRegister + VRegister[opcode.x()]) & 0xFFF;
+    }
 
-            case 0x7:
-                // 7xkk
-                // Set Vx = Vx + kk
-                int result = VRegister[x] + kk;
-                // resolve overflow - original V registers where 8-bit unsigned
-                if (result >= 256) {
-                    VRegister[x] = result - 256;
-                } else {
-                    VRegister[x] = result;
-                }
-                return;
+    /**
+     * Set I = location of sprite for digit Vx
+     */
+    private void op_FX29_loadSprite() {
+        IRegister = VRegister[opcode.x()] * 5; // each sprite is 5 byte long
+        drawFlag = true;
+    }
 
+    /**
+     * Store BCD representation of Vx in memory locations I, I+1, I+2
+     */
+    private void op_FX33_storeBCD() {
+        int onesDigitOfVx = VRegister[opcode.x()] % 10;
+        int tensDigitOfVx = VRegister[opcode.x()] % 100 / 10;
+        int hundredsDigitOfVx = VRegister[opcode.x()] % 1000 / 100;
+        memory.writeByte(hundredsDigitOfVx, IRegister);
+        memory.writeByte(tensDigitOfVx, IRegister + 1);
+        memory.writeByte(onesDigitOfVx, IRegister + 2);
+    }
 
-            case 0x8:
+    /**
+     * Stores registers V0 through Vx in memory starting at location I
+     */
+    private void op_FX55_storeRegisterInMemory() {
+        for (int i = 0; i < opcode.x() + 1; i++) {
+            memory.writeByte(VRegister[i], IRegister + i);
+        }
+    }
 
-                switch (n) {
-
-                    case 0:
-                        // 8xy0
-                        // Set Vx = Vy
-                        VRegister[x] = VRegister[y];
-                        return;
-
-                    case 1:
-                        // 8xy1
-                        // Set Vx = Vx OR Vy
-                        VRegister[x] |= VRegister[y];
-                        return;
-
-                    case 2:
-                        // 8xy2
-                        // Set Vx = Vx AND Vy
-                        VRegister[x] &= VRegister[y];
-                        return;
-
-                    case 3:
-                        // 8xy3
-                        // Set Vx = XOR Vy
-                        VRegister[x] ^= VRegister[y];
-                        return;
-
-                    case 4:
-                        // 8xy4
-                        // Set Vx = Vx + Vy, set VF = carry
-                        int sum = VRegister[x] + VRegister[y];
-                        int sumsLowestByte = sum & 0xFF;
-                        VRegister[x] = sumsLowestByte;
-                        VRegister[0xF] = sum > 0xFF ? 1 : 0;
-                        return;
-
-
-                    case 5:
-                        // 8xy5
-                        // set Vx = Vx - Vy, set VF = NOT borrow
-                        if (VRegister[x] > VRegister[y]) {
-                            VRegister[0xF] = 1;
-                        } else {
-                            VRegister[0xF] = 0;
-                        }
-                        VRegister[x] -= VRegister[y];
-                        return;
-
-                    case 6:
-                        // 8xy6
-                        // Set Vx = Vx SHR 1
-                        int leastSignificantBit = VRegister[x] & 1;
-                        VRegister[0xF] = leastSignificantBit;
-                        VRegister[x] >>= 1;
-                        return;
-
-                    case 7:
-                        // 8xy7
-                        // Set Vx = Vy - Vx, set VF = NOT borrow
-                        if (VRegister[y] > VRegister[x]) {
-                            VRegister[0xF] = 1;
-                        } else {
-                            VRegister[0xF] = 0;
-                        }
-                        VRegister[x] = VRegister[y] - VRegister[x];
-                        return;
-
-                    case 0xE:
-                        // 8xyE
-                        // Set Vx = Vx SHL 1
-                        int mostSignificantBit = VRegister[x] >> 7;
-                        VRegister[0xF] = mostSignificantBit;
-                        VRegister[x] <<= 1;
-                        return;
-                }
-
-
-            case 0x9:
-                // 9xy0
-                // Skip next instruction if Vx != Vy
-                if (n == 0) {
-                    if (VRegister[x] != VRegister[y]) {
-                        incrementPC();
-                    }
-                    return;
-                }
-
-            case 0xA:
-                // Annn
-                // Set I = nnn
-                IRegister = nnn;
-                return;
-
-            case 0xB:
-                // Bnnn
-                // Jump to location nnn + V0
-                pc = VRegister[0] + nnn;
-                return;
-            case 0xC:
-                // Cxkk
-                // Set Vx = random byte AND kk
-                int randomUnsignedByte = random.nextInt(266);
-                VRegister[x] = randomUnsignedByte & kk;
-                return;
-
-            case 0xD:
-                // Dxyn
-                // Display n-byte sprite starting at memory location I at (Vx, Vy), set VF = collision
-                VRegister[0xF] = 0;
-
-                for (int yLine = 0; yLine < n; yLine++) {
-
-                    int spriteByte = memory.readByte(IRegister + yLine);
-                    int yCoord = VRegister[y] + yLine;
-                    yCoord = yCoord % Screen.NUM_PIXEL_ROWS;
-
-                    for (int xLine = 0; xLine < 8; xLine++) {
-
-                        int xCoord = VRegister[x] + xLine;
-                        xCoord = xCoord % Screen.NUM_PIXEL_COLUMNS;
-                        int previousPixelVal = screen.getPixel(xCoord, yCoord);
-                        int newPixelVal = previousPixelVal ^ (1 & (spriteByte >> 7-xLine));
-                        screen.setPixel(xCoord, yCoord, newPixelVal);
-
-                        if (previousPixelVal == 1 && newPixelVal == 0) {
-                            VRegister[0xF] = 1;
-                        }
-                    }
-                }
-                drawFlag = true;
-                return;
-
-            case 0xE:
-
-                switch(kk) {
-
-                    case 0x9E:
-                        //Ex9E
-                        // Skip next instruction if key with the value of Vx is pressed
-                        if (keyboard.isKeyDown(VRegister[x])) {
-                            incrementPC();
-                        }
-                        return;
-
-                    case 0xA1:
-                        // ExA1
-                        // Skip next instruction if key with the value of Vx is not pressed
-                        if (!keyboard.isKeyDown(VRegister[x])) {
-                            incrementPC();
-                        }
-                        return;
-                }
-
-            case 0xF:
-
-                switch (kk) {
-
-                    case 0x07:
-                        // Fx07
-                        // Set Vx = delay timer value
-                        VRegister[x] = delayTimer;
-                        return;
-
-
-                    case 0x0A:
-                        // Fx0A
-                        // Wait for a key press, store the value of the key in Vx
-                        for (int i = 0x0; i < 0xF; i++) {
-                            if (keyboard.isKeyDown(i)) {
-                                VRegister[x] = i;
-                                keyboard.forceKeyUp(i);
-                                return;
-                            }
-                        }
-                        pc -= 2;
-                        return;
-
-
-                    case 0x15:
-                        // Fx15
-                        // Set the delay timer = Vx
-                        delayTimer = VRegister[x];
-                        return;
-
-                    case 0x18:
-                        // Fx18
-                        // Set sound timer = Vx
-                        soundTimer = VRegister[x];
-                        return;
-
-                    case 0x1E:
-                        // Fx1E
-                        // Set I = I + Vx
-                        IRegister += VRegister[x];
-                        return;
-
-                    case 0x29:
-                        // Fx29
-                        // Set I = location of sprite for digit Vx
-                        IRegister = VRegister[x] * 5; // each sprite is 5 byte long
-                        drawFlag = true;
-                        return;
-
-                    case 0x33:
-                        // Fx33
-                        // Store BCD representation of Vx in memory locations I, I+1, I+2
-                        int onesDigitOfVx = VRegister[x] % 10;
-                        int tensDigitOfVx = VRegister[x] % 100 / 10;
-                        int hundredsDigitOfVx = VRegister[x] % 1000 / 100;
-                        memory.writeByte(hundredsDigitOfVx, IRegister);
-                        memory.writeByte(tensDigitOfVx, IRegister + 1);
-                        memory.writeByte(onesDigitOfVx, IRegister + 2);
-                        return;
-
-                    case 0x55:
-                        // Fx55
-                        // Stores registers V0 through Vx in memory starting at location I
-                        for (int i = 0; i < x + 1; i++) {
-                            memory.writeByte(VRegister[i], IRegister + i);
-                        }
-                        return;
-
-                    case 0x65:
-                        // Fx65
-                        // Reads registers V0 through Vx from memory starting at location I
-                        for (int i = 0; i < x + 1; i++) {
-                            VRegister[i] = memory.readByte(IRegister + i);
-                        }
-                        return;
-                }
-
-            default:
-                System.out.println(String.format("Unknown opcode: 0x%x\n", instruction));
+    /**
+     * Reads registers V0 through Vx from memory starting at location I
+     */
+    private void op_FX65_readRegistersFromMemory() {
+        for (int i = 0; i < opcode.x() + 1; i++) {
+            VRegister[i] = memory.readByte(IRegister + i);
         }
     }
 
@@ -419,8 +513,8 @@ public class CPU {
         return soundTimer;
     }
 
-    public int getInstruction() {
-        return instruction;
+    public Opcode getOpcode() {
+        return opcode;
     }
 
     public int[] getVRegister() {
@@ -455,8 +549,8 @@ public class CPU {
         this.soundTimer = soundTimer;
     }
 
-    public void setInstruction(int instruction) {
-        this.instruction = instruction;
+    public void setOpcode(int instruction) {
+        this.opcode = new Opcode(instruction);
     }
 
     public void setIRegister(int IRegister) {

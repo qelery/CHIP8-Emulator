@@ -26,6 +26,6 @@ PUZZLE: The tiles will mix themselves up well. <br> When they stop, put them bac
 
 SUBMARINE: Score points by hitting the subs below. Key W to fire. <br> Large subs are 5 points. Small subs are 10 points.
 
-TETRIS: Key W moves piece left. Key moves piece right. <br> Key Q rotates piece. Key A speeds fall.
+TETRIS: Key W moves piece left. Key E moves piece right. <br> Key Q rotates piece. Key A speeds fall.
 
 UFO: Shoot your missiles at the UFOs. The smaller UFO is worth more points.<br> [Q] - shoot LEFT diagonal,  [W] - shoot straight UP,  [E] - shoot RIGHT diagonal
