@@ -430,19 +430,6 @@ public class CPU {
      * Wait for a key press, store the value of the key in Vx
      */
     private void op_FX0A_waitForKeyPress() {
-        //                        int pressedKey = keyboard.getPressedKey();
-        //                        while (pressedKey == 0) {
-        //                            try {
-        //                                Thread.sleep(300);
-        //                            } catch (InterruptedException e) {
-        //                                e.printStackTrace();
-        //                            }
-        //                            pressedKey = keyboard.getPressedKey();
-        //                        }
-        //                        keyboard.forceKeyRelease(pressedKey);
-        //                        VRegister[opcode.x()] = pressedKey;
-
-        // TODO: I don't think this is right
         for (int i = 0x0; i < 0xF; i++) {
             if (keyboard.isKeyPressed(i)) {
                 VRegister[opcode.x()] = i;
@@ -450,6 +437,8 @@ public class CPU {
                 return;
             }
         }
+        // Rather than suspending the thread, the CPU is simply not advanced
+        // to the next instruction
         pc -= 2;
     }
 
