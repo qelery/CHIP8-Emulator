@@ -1,4 +1,4 @@
-package com.qelery.chip8;
+package com.qelery.chip8.sound;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;

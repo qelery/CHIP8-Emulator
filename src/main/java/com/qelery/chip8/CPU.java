@@ -1,5 +1,7 @@
 package com.qelery.chip8;
 
+import com.qelery.chip8.sound.Sound;
+
 import java.util.Random;
 
 /**

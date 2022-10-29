@@ -1,5 +1,6 @@
 package com.qelery.chip8;
 
+import com.qelery.chip8.sound.Sound;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
