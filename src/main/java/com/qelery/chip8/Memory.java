@@ -2,10 +2,9 @@ package com.qelery.chip8;
 
 /**
  * A Memory object where the font sprite and ROM data are loaded.
- *<p>
+ * <p>
  * CHIP-8 was most commonly implemented on microcomputers that had
- * 4KB RAM. The first 512 bytes were used by the original CHIP-8
- * interpreter and should not be used by programs.
+ * 4KB RAM.
  * <p>
  * <h2>References</h2>
  * <a href="http://devernay.free.fr/hacks/chip8/C8TECH10.HTM">Cowgod's Chip-8 Technical Reference</a><br>
@@ -15,7 +14,7 @@ public class Memory {
 
     /**
      * Skip the first 512 bytes of memory. In the original CHIP-8 they
-     * held the interpreter in the original CHIP-8.
+     * held the interpreter.
      */
     public static final int READ_START_LOCATION = 512;
     private final int[] RAM;
@@ -58,7 +57,7 @@ public class Memory {
     }
 
     public int readByte(int address) {
-        return RAM[address] & 0xFF;
+        return RAM[address] & 0xFF; // unsigned representation
     }
 
     public void writeByte(int value, int address) {

@@ -93,7 +93,6 @@ public class CPU {
         drawFlag = false;
     }
 
-
     public void tickClocks() {
         if (delayTimer > 0) {
             delayTimer--;
