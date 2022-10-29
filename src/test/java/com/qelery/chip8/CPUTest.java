@@ -1,6 +1,5 @@
 package com.qelery.chip8;
 
-import com.qelery.chip8.sound.SineWave;
 import com.qelery.chip8.sound.Sound;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
