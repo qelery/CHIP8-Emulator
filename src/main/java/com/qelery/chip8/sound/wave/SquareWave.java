@@ -1,13 +1,13 @@
 package com.qelery.chip8.sound.wave;
 
-public class SquareWaveSound extends AbstractWaveSound {
+public class SquareWave extends AbstractWave {
 
     /**
      * Creates a square wave tone.
      *
      * @param frequency in hertz
      */
-    public SquareWaveSound(double frequency) {
+    public SquareWave(double frequency) {
         super(frequency);
     }
 

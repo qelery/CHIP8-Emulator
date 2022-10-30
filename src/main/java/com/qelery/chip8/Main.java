@@ -1,7 +1,7 @@
 package com.qelery.chip8;
 
 import com.qelery.chip8.sound.Sound;
-import com.qelery.chip8.sound.wave.SineWaveSound;
+import com.qelery.chip8.sound.wave.SineWave;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -43,7 +43,7 @@ public class Main extends Application {
     private void initialize() {
         this.display = new Display(12, Color.WHITE, Color.BLACK);
         this.keyboard = new Keyboard();
-        this.sound = new SineWaveSound(300);
+        this.sound = new SineWave(300);
         this.memory = new Memory(4096);
         this.cpu = new CPU(500, memory, display, sound, keyboard);
 

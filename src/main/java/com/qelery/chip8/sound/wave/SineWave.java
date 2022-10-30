@@ -1,13 +1,13 @@
 package com.qelery.chip8.sound.wave;
 
-public class SineWaveSound extends AbstractWaveSound {
+public class SineWave extends AbstractWave {
 
     /**
      * Creates a sine wave tone.
      *
      * @param frequency in hertz
      */
-    public SineWaveSound(double frequency) {
+    public SineWave(double frequency) {
         super(frequency);
     }
 

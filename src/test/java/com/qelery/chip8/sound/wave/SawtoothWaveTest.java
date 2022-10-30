@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@Disabled("This unit test is completely auditory! Run manually to test.")
-class SawtoothWaveSoundTest {
+@Disabled("SawtoothWaveTest is completely auditory. Run manually to test.")
+class SawtoothWaveTest {
 
-    SawtoothWaveSound sound;
+    SawtoothWave sound;
 
     final int THREE_SECONDS = 3000;
     static int testsExecuted = 0;
@@ -16,7 +16,7 @@ class SawtoothWaveSoundTest {
     @BeforeEach
     void setup() {
         double frequency = 300;
-        this.sound = new SawtoothWaveSound(frequency);
+        this.sound = new SawtoothWave(frequency);
     }
 
     @Test

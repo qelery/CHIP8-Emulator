@@ -9,16 +9,16 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
-public abstract class AbstractWaveSound implements Sound {
+public abstract class AbstractWave implements Sound {
 
     public static final int SAMPLE_RATE = 16 * 1024;
-    private static final Logger logger = LogManager.getLogger(AbstractWaveSound.class);
+    private static final Logger logger = LogManager.getLogger(AbstractWave.class);
     protected final double frequency;
     protected boolean isPlaying;
     protected SourceDataLine sourceDL;
     protected byte[] toneBuffer;
 
-    protected AbstractWaveSound(double frequency) {
+    protected AbstractWave(double frequency) {
         this.frequency = frequency;
         this.isPlaying = false;
 
@@ -45,7 +45,7 @@ public abstract class AbstractWaveSound implements Sound {
         }
         if (sourceDL != null) {
             isPlaying = true;
-            Thread playThread = new SineWaveSound.SoundThread();
+            Thread playThread = new SineWave.SoundThread();
             playThread.setPriority(Thread.MAX_PRIORITY);
             playThread.start();
         } else {

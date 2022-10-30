@@ -1,31 +1,30 @@
-package com.qelery.chip8.sound.wave;
+package com.qelery.chip8.sound.piano;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@Disabled("This unit test is completely auditory! Run manually to test.")
-class SineWaveSoundTest {
+@Disabled("PianoNoteTest is completely auditory. Run manually to test.")
+class PianoNoteTest {
 
-    SineWaveSound sound;
+    PianoNote sound;
 
-    final int THREE_SECONDS = 3000;
+    final int FIVE_SECONDS = 5000;
     static int testsExecuted = 0;
 
     @BeforeEach
     void setup() {
-        double frequency = 300;
-        this.sound = new SineWaveSound(frequency);
+        this.sound = new PianoNote(MusicalNote.C);
     }
 
     @Test
     @DisplayName("Should play sound then stop.")
     void playThenStop() throws InterruptedException {
         testsExecuted++;
-        System.out.println("SineWaveSoundTest test " + testsExecuted + ". Should hear sound for 3 seconds.");
+        System.out.println("PianoNoteTest test " + testsExecuted + ". Should hear sound for 3 seconds.");
         sound.play();
-        Thread.sleep(THREE_SECONDS);
+        Thread.sleep(FIVE_SECONDS);
         sound.stop();
     }
 
@@ -33,9 +32,9 @@ class SineWaveSoundTest {
     @DisplayName("Should play sound then close the audio line.")
     void playThenCloseLine() throws InterruptedException {
         testsExecuted++;
-        System.out.println("SineWaveSoundTest test " + testsExecuted + ". Should hear sound for 3 seconds.");
+        System.out.println("PianoNoteTest test " + testsExecuted + ". Should hear sound for 3 seconds.");
         sound.play();
-        Thread.sleep(THREE_SECONDS);
+        Thread.sleep(FIVE_SECONDS);
         sound.closeLine();
     }
 }

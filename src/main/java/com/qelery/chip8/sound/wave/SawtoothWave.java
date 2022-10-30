@@ -1,13 +1,13 @@
 package com.qelery.chip8.sound.wave;
 
-public class SawtoothWaveSound extends AbstractWaveSound {
+public class SawtoothWave extends AbstractWave {
 
     /**
      * Creates a sawtooth wave tone.
      *
      * @param frequency in hertz
      */
-    public SawtoothWaveSound(double frequency) {
+    public SawtoothWave(double frequency) {
         super(frequency);
     }
 
