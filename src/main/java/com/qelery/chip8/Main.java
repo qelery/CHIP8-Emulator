@@ -6,6 +6,7 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -40,7 +41,7 @@ public class Main extends Application {
 
 
     private void initialize() {
-        this.display = new Display(12);
+        this.display = new Display(12, Color.WHITE, Color.BLACK);
         this.keyboard = new Keyboard();
         this.sound = new SineWaveSound(300);
         this.memory = new Memory(4096);

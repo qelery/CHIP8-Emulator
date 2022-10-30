@@ -2,7 +2,10 @@ package com.qelery.chip8.sound.wave;
 
 import com.qelery.chip8.sound.Sound;
 
-import javax.sound.sampled.*;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
 
 public abstract class AbstractWaveSound implements Sound {
     public static final int SAMPLE_RATE = 16 * 1024;
@@ -65,7 +68,6 @@ public abstract class AbstractWaveSound implements Sound {
             do {
                 sourceDL.write(toneBuffer, 0, toneBuffer.length);
             } while (isPlaying);
-            sourceDL.drain();
             sourceDL.stop();
             sourceDL.flush();
         }
