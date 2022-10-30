@@ -81,6 +81,18 @@ class OpcodeTest {
     }
 
     @Test
+    @DisplayName("Should return a hex string representation of the opcode")
+    void toHexString() {
+        int instruction = (0xa << 12) + (0x2 << 8) + (0xe << 4) + 0xf;
+        Opcode opcode = new Opcode(instruction);
+        String expectedHexString = "0xA2EF";
+
+        String actualHexString = opcode.toHexString();
+
+        assertEquals(expectedHexString, actualHexString);
+    }
+
+    @Test
     @DisplayName("Should return true if two opcodes have the same integer value")
     void testEquals_returnTrue() {
         int firstByte = 0x0055;

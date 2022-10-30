@@ -19,7 +19,7 @@ import java.util.Objects;
  * nnn &#9; last 3 nibbles &#9; ( ■ n n n )<br>
  */
 public class Opcode {
-    private final int[] opcode;
+    private final int[] nibbles;
     private final int instruction;
 
     public Opcode(int firstByte, int secondByte) {
@@ -28,11 +28,11 @@ public class Opcode {
 
     public Opcode(int instruction) {
         this.instruction = instruction;
-        this.opcode = new int[4];
-        this.opcode[0] = instruction >> 12 & 0x00F;
-        this.opcode[1] = instruction >> 8 & 0x00F;
-        this.opcode[2] = instruction >> 4 & 0x00F;
-        this.opcode[3] = instruction & 0x00F;
+        this.nibbles = new int[4];
+        this.nibbles[0] = instruction >> 12 & 0x00F;
+        this.nibbles[1] = instruction >> 8 & 0x00F;
+        this.nibbles[2] = instruction >> 4 & 0x00F;
+        this.nibbles[3] = instruction & 0x00F;
     }
 
     /**
@@ -42,8 +42,8 @@ public class Opcode {
      * @return the i-th nibble of the opcode
      */
     public int getNibble(int index) {
-        Objects.checkIndex(index, opcode.length);
-        return opcode[index];
+        Objects.checkIndex(index, nibbles.length);
+        return nibbles[index];
     }
 
     /**
@@ -93,6 +93,14 @@ public class Opcode {
      */
     public int fullValue() {
         return instruction;
+    }
+
+    /**
+     * @return the hexadecimal string representation of the opcode
+     * (e.g. 0x805A)
+     */
+    public String toHexString() {
+        return "0x" + Integer.toHexString(instruction).toUpperCase();
     }
 
     @Override
