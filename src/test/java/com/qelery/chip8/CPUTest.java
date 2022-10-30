@@ -23,7 +23,7 @@ class CPUTest {
     @Mock
     Memory memory;
     @Mock
-    Screen screen;
+    Display display;
     @Mock
     Sound sound;
     @Mock
@@ -32,7 +32,7 @@ class CPUTest {
     @BeforeEach
     void setup() {
         int clockSpeed = 500;
-        this.cpu = new CPU(clockSpeed, memory, screen, sound, keyboard);
+        this.cpu = new CPU(clockSpeed, memory, display, sound, keyboard);
     }
 
     @Nested
@@ -140,7 +140,7 @@ class CPUTest {
 
             cpu.executeInstruction();
 
-            Mockito.verify(screen).clear();
+            Mockito.verify(display).clear();
             assertTrue(cpu.isDrawFlagSet());
         }
 

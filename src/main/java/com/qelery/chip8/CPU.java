@@ -73,19 +73,19 @@ public class CPU {
     private boolean drawFlag;
 
     private final Memory memory;
-    private final Screen screen;
+    private final Display display;
     private final Sound sound;
     private final Keyboard keyboard;
     private final Random random;
 
-    public CPU(int clockSpeed, Memory memory, Screen screen, Sound sound, Keyboard keyboard) {
+    public CPU(int clockSpeed, Memory memory, Display display, Sound sound, Keyboard keyboard) {
         this.clockSpeed = clockSpeed;
         this.pc = Memory.READ_START_LOCATION;
         this.VRegister = new int[16];
         this.stack = new int[16];
         this.drawFlag = false;
         this.memory = memory;
-        this.screen = screen;
+        this.display = display;
         this.sound = sound;
         this.keyboard = keyboard;
         this.random = new Random();
@@ -192,7 +192,7 @@ public class CPU {
      * Clear the display
      */
     private void clearScreen_0x00E0() {
-        screen.clear();
+        display.clear();
         drawFlag = true;
     }
 
@@ -384,15 +384,15 @@ public class CPU {
 
             int spriteByte = memory.readByte(IRegister + yLine);
             int yCoord = VRegister[opcode.y()] + yLine;
-            yCoord = yCoord % Screen.NUM_PIXEL_ROWS;
+            yCoord = yCoord % Display.HEIGHT_IN_PIXELS;
 
             for (int xLine = 0; xLine < 8; xLine++) {
 
                 int xCoord = VRegister[opcode.x()] + xLine;
-                xCoord = xCoord % Screen.NUM_PIXEL_COLUMNS;
-                int previousPixelVal = screen.getPixel(xCoord, yCoord);
+                xCoord = xCoord % Display.LENGTH_IN_PIXELS;
+                int previousPixelVal = display.getPixel(xCoord, yCoord);
                 int newPixelVal = previousPixelVal ^ (1 & (spriteByte >> 7 - xLine));
-                screen.setPixel(xCoord, yCoord, newPixelVal);
+                display.setPixel(xCoord, yCoord, newPixelVal);
 
                 if (previousPixelVal == 1 && newPixelVal == 0) {
                     VRegister[0xF] = 1;

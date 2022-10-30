@@ -24,7 +24,7 @@ public class Main extends Application {
 
     private Memory memory;
     private CPU cpu;
-    private Screen screen;
+    private Display display;
     private Sound sound;
     private Keyboard keyboard;
 
@@ -40,15 +40,15 @@ public class Main extends Application {
 
 
     private void initialize() {
-        this.screen = new Screen(12);
+        this.display = new Display(12);
         this.keyboard = new Keyboard();
         this.sound = new SineWaveSound(300);
         this.memory = new Memory(4096);
-        this.cpu = new CPU(500, memory, screen, sound, keyboard);
+        this.cpu = new CPU(500, memory, display, sound, keyboard);
 
         stage.setTitle("CHIP8 by qelery");
         Group root = new Group();
-        root.getChildren().add(screen);
+        root.getChildren().add(display);
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setResizable(false);
@@ -72,7 +72,7 @@ public class Main extends Application {
                 }
 
                 if (cpu.isDrawFlagSet()) {
-                    screen.render();
+                    display.render();
                     cpu.clearDrawFlag();
                 }
 
