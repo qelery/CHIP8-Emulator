@@ -1,6 +1,8 @@
 package com.qelery.chip8.sound.wave;
 
 import com.qelery.chip8.sound.Sound;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
@@ -8,8 +10,9 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
 public abstract class AbstractWaveSound implements Sound {
-    public static final int SAMPLE_RATE = 16 * 1024;
 
+    public static final int SAMPLE_RATE = 16 * 1024;
+    private static final Logger logger = LogManager.getLogger(AbstractWaveSound.class);
     protected final double frequency;
     protected boolean isPlaying;
     protected SourceDataLine sourceDL;
@@ -23,7 +26,7 @@ public abstract class AbstractWaveSound implements Sound {
             openSourceDataLine();
             this.toneBuffer = createToneBuffer();
         } catch (LineUnavailableException e) {
-            System.out.println("Error created sound.");
+            logger.error("Error created sound. Line unavailable.");
         }
     }
 
@@ -46,7 +49,7 @@ public abstract class AbstractWaveSound implements Sound {
             playThread.setPriority(Thread.MAX_PRIORITY);
             playThread.start();
         } else {
-            System.out.println("Beep!");
+            logger.info("Beep! (No sound available)");
         }
     }
 
