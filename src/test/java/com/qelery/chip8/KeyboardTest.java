@@ -15,26 +15,9 @@ class KeyboardTest {
 
     Keyboard keyboard;
 
-    private final ByteArrayOutputStream mockStdOut = new ByteArrayOutputStream();
-    private final PrintStream originalStdOut = System.out;
-
     @BeforeEach
     void setup() {
         this.keyboard = new Keyboard();
-        setUpMockIOStream();
-    }
-
-    @AfterEach
-    void cleanup() {
-        restoreIOStream();
-    }
-
-    private void setUpMockIOStream() {
-        System.setOut(new PrintStream(mockStdOut));
-    }
-
-    private void restoreIOStream() {
-        System.setOut(originalStdOut);
     }
 
     @Test
@@ -50,17 +33,6 @@ class KeyboardTest {
     }
 
     @Test
-    @DisplayName("Should log message when trying to key down an unmapped key")
-    void keyDownShouldLogUnmappedKey() {
-        KeyCode unmappedKey = KeyCode.Y;
-        keyboard.keyDown(unmappedKey);
-
-        String stdOutMessage = mockStdOut.toString();
-
-        assertEquals("Key down event for unmapped key: Y\n", stdOutMessage);
-    }
-
-    @Test
     @DisplayName("Should set array index of corresponding key to false on key up")
     void keyUp() {
         int indexOfAKey = 7;
@@ -70,17 +42,6 @@ class KeyboardTest {
         keyboard.keyUp(aKey);
 
         assertFalse(keyboard.getKeys()[indexOfAKey]);
-    }
-
-    @Test
-    @DisplayName("Should log message when trying to key up an unmapped key")
-    void keyUpShouldLogUnmappedKey() {
-        KeyCode unmappedKey = KeyCode.Y;
-        keyboard.keyUp(unmappedKey);
-
-        String stdOutMessage = mockStdOut.toString();
-
-        assertEquals("Key up event for unmapped key: Y\n", stdOutMessage);
     }
 
     @Test

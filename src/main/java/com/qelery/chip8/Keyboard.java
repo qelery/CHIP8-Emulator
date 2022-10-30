@@ -1,6 +1,8 @@
 package com.qelery.chip8;
 
 import javafx.scene.input.KeyCode;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * A virtual keyboard for handling CHIP-8 input events.
@@ -33,6 +35,8 @@ import javafx.scene.input.KeyCode;
  */
 public class Keyboard {
 
+    private static final Logger logger = LogManager.getLogger(Keyboard.class);
+
     private final boolean[] keys;
 
     /**
@@ -60,7 +64,7 @@ public class Keyboard {
             case X -> keys[0x0] = true;
             case C -> keys[0xB] = true;
             case V -> keys[0xF] = true;
-            default -> System.out.println("Key down event for unmapped key: " + key);
+            default -> logger.warn("Key down event for unmapped key: {}", key);
         }
     }
 
@@ -82,7 +86,7 @@ public class Keyboard {
             case X -> keys[0x0] = false;
             case C -> keys[0xB] = false;
             case V -> keys[0xF] = false;
-            default -> System.out.println("Key up event for unmapped key: " + key);
+            default -> logger.warn("Key up event for unmapped key: {}", key);
         }
     }
 
