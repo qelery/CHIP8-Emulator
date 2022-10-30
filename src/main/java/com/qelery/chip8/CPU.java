@@ -1,7 +1,13 @@
 package com.qelery.chip8;
 
 import com.qelery.chip8.sound.Sound;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.Message;
 
+import java.text.MessageFormat;
+import java.util.HexFormat;
 import java.util.Random;
 
 /**
@@ -14,6 +20,8 @@ import java.util.Random;
  * <a href="https://en.wikipedia.org/wiki/CHIP-8">Wikipedia - CHIP-8</a><br>
  */
 public class CPU {
+
+    private static final Logger logger = LogManager.getLogger(CPU.class);
 
     /**
      * The clock speed of the CPU in  hertz.
@@ -126,6 +134,8 @@ public class CPU {
     }
 
     protected void executeInstruction() {
+        final String UNKNOWN_OPCODE_MESSAGE = "Unknown opcode: {}";
+
         if (this.opcode.fullValue() == 0x00E0) {
             clearScreen_0x00E0();
             return;
@@ -155,7 +165,7 @@ public class CPU {
                     case 0x6 -> op_8XY6_rightBitShift();
                     case 0x7 -> op_8XY7_subtractRegister();
                     case 0xE -> op_8XYE_leftBitShift();
-                    default -> System.out.printf("Unknown opcode: 0x%x%n%n", this.opcode.fullValue());
+                    default -> logger.error(UNKNOWN_OPCODE_MESSAGE, () -> opcode.toHexString());
                 }
             }
             case 0x9 -> op_9XY0_skipIfRegistersNotEqual();
@@ -167,7 +177,7 @@ public class CPU {
                 switch (opcode.kk()) {
                     case 0x9E -> op_EX9E_skipIfKeyPressed();
                     case 0xA1 -> op_EXA1_skipIfKeyNotPressed();
-                    default -> System.out.printf("Unknown opcode: 0x%x%n%n", this.opcode.fullValue());
+                    default -> logger.error(UNKNOWN_OPCODE_MESSAGE, () -> opcode.toHexString());
                 }
             }
             case 0xF -> {
@@ -181,10 +191,10 @@ public class CPU {
                     case 0x33 -> op_FX33_storeBCD();
                     case 0x55 -> op_FX55_storeRegisterInMemory();
                     case 0x65 -> op_FX65_readRegistersFromMemory();
-                    default -> System.out.printf("Unknown opcode: 0x%x%n%n", this.opcode.fullValue());
+                    default -> logger.error(UNKNOWN_OPCODE_MESSAGE, () -> opcode.toHexString());
                 }
             }
-            default -> System.out.printf("Unknown opcode: 0x%x%n%n", this.opcode.fullValue());
+            default -> logger.error(UNKNOWN_OPCODE_MESSAGE, () -> opcode.toHexString());
         }
     }
 
