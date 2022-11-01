@@ -165,9 +165,9 @@ class CPUTest {
         void executeInstruction_opcode1_shouldJump() {
             int startingPC = 5;
             cpu.setPc(startingPC);
-            int opcode = 0x1; // first nibble of instruction
+            int o = 0x1; // first nibble of instruction
             int nnn = 0x034F; // last 3 nibble of instruction
-            int instruction = (opcode << 12) + nnn;
+            int instruction = (o << 12) + nnn;
             cpu.setOpcode(instruction);
 
             cpu.executeInstruction();
@@ -182,9 +182,9 @@ class CPUTest {
             cpu.setSp(startingSP);
             int startingPC = 6;
             cpu.setPc(startingPC);
-            int opcode = 0x2; // first nibble of instruction
+            int o = 0x2; // first nibble of instruction
             int nnn = 0x034F; // last 3 nibble of instruction
-            int instruction = (opcode << 12) + nnn;
+            int instruction = (o << 12) + nnn;
             cpu.setOpcode(instruction);
 
             cpu.executeInstruction();
@@ -197,13 +197,13 @@ class CPUTest {
         @Test
         @DisplayName("Opcode 3 - should skip next instruction if VRegister[x] equals kk")
         void executeInstruction_opcode3_shouldConditionallySkipNextInstruction() {
-            int opcode = 0x3; // first nibble of instruction
+            int o = 0x3; // first nibble of instruction
             int x = 0x07; // second nibble of instruction
             int kk = 0x0055; // last 2 nibbles of instruction
             cpu.getVRegister()[x] = kk; // VRegister[x] equals kk
             int startingPC = 10;
             cpu.setPc(startingPC);
-            int instruction = (opcode << 12) + (x << 8) + kk;
+            int instruction = (o << 12) + (x << 8) + kk;
             cpu.setOpcode(instruction);
 
             cpu.executeInstruction();
@@ -214,13 +214,13 @@ class CPUTest {
         @Test
         @DisplayName("Opcode 3 - should not skip next instruction if VRegister[x] does not equal kk")
         void executeInstruction_opcode3_shouldConditionallyNotSkipNextInstruction() {
-            int opcode = 0x3; // first nibble of instruction
+            int o = 0x3; // first nibble of instruction
             int x = 0x07; // second nibble of instruction
             int kk = 0x0055; // last 2 nibbles of instruction
             cpu.getVRegister()[x] = 0x0044; // VRegister[x] does not equal kk
             int startingPC = 10;
             cpu.setPc(startingPC);
-            int instruction = (opcode << 12) + (x << 8) + kk;
+            int instruction = (o << 12) + (x << 8) + kk;
             cpu.setOpcode(instruction);
 
             cpu.executeInstruction();
@@ -231,13 +231,13 @@ class CPUTest {
         @Test
         @DisplayName("Opcode 4 - should skip next instruction if VRegister[x] does not equal kk")
         void executeInstruction_opcode4_shouldConditionallySkipNextInstruction() {
-            int opcode = 0x4; // first nibble of instruction
+            int o = 0x4; // first nibble of instruction
             int x = 0x07; // second nibble of instruction
             int kk = 0x0055; // last 2 nibbles of instruction
             cpu.getVRegister()[x] = 0x0044; // VRegister[x] does not equal kk
             int startingPC = 10;
             cpu.setPc(startingPC);
-            int instruction = (opcode << 12) + (x << 8) + kk;
+            int instruction = (o << 12) + (x << 8) + kk;
             cpu.setOpcode(instruction);
 
             cpu.executeInstruction();
@@ -248,13 +248,13 @@ class CPUTest {
         @Test
         @DisplayName("Opcode 4 - should not skip next instruction if VRegister[x] equals kk")
         void executeInstruction_opcode4_shouldConditionallyNotSkipNextInstruction() {
-            int opcode = 0x4; // first nibble of instruction
+            int o = 0x4; // first nibble of instruction
             int x = 0x07; // second nibble of instruction
             int kk = 0x0055; // last 2 nibbles of instruction
             cpu.getVRegister()[x] = kk; // VRegister[x] equals kk
             int startingPC = 10;
             cpu.setPc(startingPC);
-            int instruction = (opcode << 12) + (x << 8) + kk;
+            int instruction = (o << 12) + (x << 8) + kk;
             cpu.setOpcode(instruction);
 
             cpu.executeInstruction();
@@ -265,7 +265,7 @@ class CPUTest {
         @Test
         @DisplayName("Opcode 5 - should skip next instruction if n equals 0 and VRegister[x] equals VRegister[y]")
         void executeInstruction_opcode5_shouldConditionallySkipNextInstruction() {
-            int opcode = 0x5; // first nibble of instruction
+            int o = 0x5; // first nibble of instruction
             int x = 0x07; // second nibble of instruction
             int y = 0x001; // third nibble of instruction
             int n = 0x0000; // last nibble of instruction
@@ -274,7 +274,7 @@ class CPUTest {
             cpu.getVRegister()[y] = cpu.getVRegister()[x];
             int startingPC = 10;
             cpu.setPc(startingPC);
-            int instruction = (opcode << 12) + (x << 8) + kk;
+            int instruction = (o << 12) + (x << 8) + kk;
             cpu.setOpcode(instruction);
 
             cpu.executeInstruction();
@@ -286,7 +286,7 @@ class CPUTest {
         @DisplayName("Opcode 5 - should not skip next instruction if n does not 0 or VRegister[x] does not equal VRegister[y]")
         void executeInstruction_opcode5_shouldConditionallyNotSkipNextInstruction() {
             // n equals 0, VRegister[x] does not equal VRegister[y]
-            int opcode = 0x5; // first nibble of instruction
+            int o = 0x5; // first nibble of instruction
             int x = 0x07; // second nibble of instruction
             int y = 0x001; // third nibble of instruction
             int n = 0x0000; // last nibble of instruction
@@ -295,7 +295,7 @@ class CPUTest {
             cpu.getVRegister()[y] = 6;
             int startingPC = 10;
             cpu.setPc(startingPC);
-            int instruction = (opcode << 12) + (x << 8) + kk;
+            int instruction = (o << 12) + (x << 8) + kk;
             cpu.setOpcode(instruction);
 
             cpu.executeInstruction();
@@ -309,7 +309,7 @@ class CPUTest {
             cpu.getVRegister()[x] = 5;
             cpu.getVRegister()[y] = cpu.getVRegister()[x];
             cpu.setPc(startingPC);
-            instruction = (opcode << 12) + (x << 8) + kk;
+            instruction = (o << 12) + (x << 8) + kk;
             cpu.setOpcode(instruction);
 
             cpu.executeInstruction();
@@ -320,10 +320,10 @@ class CPUTest {
         @Test
         @DisplayName("Opcode 6 - should write value kk to VRegister[x]")
         void executeInstruction_opcode6_shouldWriteValueToVRegister() {
-            int opcode = 0x6; // first nibble of instruction
+            int o = 0x6; // first nibble of instruction
             int x = 0x07; // second nibble of instruction
             int kk = 0x0055; // last 2 nibbles of instruction
-            int instruction = (opcode << 12) + (x << 8) + kk;
+            int instruction = (o << 12) + (x << 8) + kk;
             cpu.setOpcode(instruction);
 
             cpu.executeInstruction();
@@ -334,10 +334,10 @@ class CPUTest {
         @Test
         @DisplayName("Opcode 7 - should write value kk plus VRegister[x] to VRegister[x]")
         void executeInstruction_opcode7_shouldWriteValueToVRegister() {
-            int opcode = 0x7; // first nibble of instruction
+            int o = 0x7; // first nibble of instruction
             int x = 0x07; // second nibble of instruction
             int kk = 0x0055; // last 2 nibbles of instruction
-            int instruction = (opcode << 12) + (x << 8) + kk;
+            int instruction = (o << 12) + (x << 8) + kk;
             int initialVRegisterValue = 0x0001;
             cpu.getVRegister()[x] = initialVRegisterValue;
             cpu.setOpcode(instruction);
@@ -350,10 +350,10 @@ class CPUTest {
         @Test
         @DisplayName("Opcode 7 - should ensure VRegister[x], which represents an unsigned byte, resolves overflow")
         void executeInstruction_opcode7_shouldNotOverflowUnsignedByte() {
-            int opcode = 0x7; // first nibble of instruction
+            int o = 0x7; // first nibble of instruction
             int x = 0x07; // second nibble of instruction
             int kk = 0x00FF; // last 2 nibbles of instruction
-            int instruction = (opcode << 12) + (x << 8) + kk;
+            int instruction = (o << 12) + (x << 8) + kk;
             int initialVRegisterValue = 0x00F;
             cpu.getVRegister()[x] = initialVRegisterValue;
             cpu.setOpcode(instruction);
@@ -370,11 +370,11 @@ class CPUTest {
             @Test
             @DisplayName("Opcode = 8, n = 0 - should set VRegister[x] to VRegister[y]")
             void executeInstruction_opcode8_n0_shouldWriteValueToVRegister() {
-                int opcode = 0x8; // first nibble of instruction
+                int o = 0x8; // first nibble of instruction
                 int x = 0x02; // second nibble of instruction
                 int y = 0x003; // third nibble of instruction
                 int n = 0x0000; // last nibble of instruction
-                int instruction = (opcode << 12) + (x << 8) + (y << 4) + n;
+                int instruction = (o << 12) + (x << 8) + (y << 4) + n;
                 cpu.setOpcode(instruction);
                 cpu.getVRegister()[x] = 5;
                 cpu.getVRegister()[y] = 10;
@@ -387,11 +387,11 @@ class CPUTest {
             @Test
             @DisplayName("Opcode = 8, n = 1 - should set VRegister[x] to bitwise OR of its value and VRegister[y]")
             void executeInstruction_opcode8_n1_shouldWriteValueToVRegister() {
-                int opcode = 0x8; // first nibble of instruction
+                int o = 0x8; // first nibble of instruction
                 int x = 0x02; // second nibble of instruction
                 int y = 0x003; // third nibble of instruction
                 int n = 0x0001; // last nibble of instruction
-                int instruction = (opcode << 12) + (x << 8) + (y << 4) + n;
+                int instruction = (o << 12) + (x << 8) + (y << 4) + n;
                 cpu.setOpcode(instruction);
                 int initialVRegisterXValue = 5;
                 cpu.getVRegister()[x] = initialVRegisterXValue;
@@ -406,11 +406,11 @@ class CPUTest {
             @Test
             @DisplayName("Opcode = 8, n = 2 - should set VRegister[x] to bitwise AND of its value and VRegister[y]")
             void executeInstruction_opcode8_n2_shouldWriteValueToVRegister() {
-                int opcode = 0x8; // first nibble of instruction
+                int o = 0x8; // first nibble of instruction
                 int x = 0x02; // second nibble of instruction
                 int y = 0x003; // third nibble of instruction
                 int n = 0x0002; // last nibble of instruction
-                int instruction = (opcode << 12) + (x << 8) + (y << 4) + n;
+                int instruction = (o << 12) + (x << 8) + (y << 4) + n;
                 cpu.setOpcode(instruction);
                 int initialVRegisterXValue = 5;
                 cpu.getVRegister()[x] = initialVRegisterXValue;
@@ -425,11 +425,11 @@ class CPUTest {
             @Test
             @DisplayName("Opcode = 8, n = 3 - should set VRegister[x] to bitwise XOR of its value and VRegister[y]")
             void executeInstruction_opcode8_n3_shouldWriteValueToVRegister() {
-                int opcode = 0x8; // first nibble of instruction
+                int o = 0x8; // first nibble of instruction
                 int x = 0x02; // second nibble of instruction
                 int y = 0x003; // third nibble of instruction
                 int n = 0x0003; // last nibble of instruction
-                int instruction = (opcode << 12) + (x << 8) + (y << 4) + n;
+                int instruction = (o << 12) + (x << 8) + (y << 4) + n;
                 cpu.setOpcode(instruction);
                 int initialVRegisterXValue = 5;
                 cpu.getVRegister()[x] = initialVRegisterXValue;
@@ -445,11 +445,11 @@ class CPUTest {
             @DisplayName("Opcode = 8, n = 4 - should sum VRegister[x] add VRegister[y] " +
                     "and set VRegister[x] to the lowest byte of the sum, resolving unsigned byte overflow")
             void executeInstruction_opcode8_n4_shouldWriteValueToVRegisterX() {
-                int opcode = 0x8; // first nibble of instruction
+                int o = 0x8; // first nibble of instruction
                 int x = 0x02; // second nibble of instruction
                 int y = 0x003; // third nibble of instruction
                 int n = 0x0004; // last nibble of instruction
-                int instruction = (opcode << 12) + (x << 8) + (y << 4) + n;
+                int instruction = (o << 12) + (x << 8) + (y << 4) + n;
                 cpu.setOpcode(instruction);
                 int initialVRegisterXValue = 0x003F;
                 cpu.getVRegister()[x] = initialVRegisterXValue;
@@ -466,11 +466,11 @@ class CPUTest {
             @DisplayName("Opcode = 8, n = 4 - should set VRegister[F] to 1 if the lowest byte of the sum of " +
                     "VRegister[x] and VRegister[y] is greater than the value of an unsigned byte")
             void executeInstruction_opcode8_n4_shouldWriteOneToVRegisterF() {
-                int opcode = 0x8; // first nibble of instruction
+                int o = 0x8; // first nibble of instruction
                 int x = 0x02; // second nibble of instruction
                 int y = 0x003; // third nibble of instruction
                 int n = 0x0004; // last nibble of instruction
-                int instruction = (opcode << 12) + (x << 8) + (y << 4) + n;
+                int instruction = (o << 12) + (x << 8) + (y << 4) + n;
                 cpu.setOpcode(instruction);
                 int initialVRegisterXValue = 0x00C9;
                 cpu.getVRegister()[x] = initialVRegisterXValue;
@@ -486,11 +486,11 @@ class CPUTest {
             @DisplayName("Opcode = 8, n = 4 - should set VRegister[F] to 0 if the lowest byte of the sum of " +
                     "VRegister[x] and VRegister[y] is less than or equal to than the value of an unsigned byte")
             void executeInstruction_opcode8_n4_shouldWriteZeroToVRegisterF() {
-                int opcode = 0x8; // first nibble of instruction
+                int o = 0x8; // first nibble of instruction
                 int x = 0x02; // second nibble of instruction
                 int y = 0x003; // third nibble of instruction
                 int n = 0x0004; // last nibble of instruction
-                int instruction = (opcode << 12) + (x << 8) + (y << 4) + n;
+                int instruction = (o << 12) + (x << 8) + (y << 4) + n;
                 cpu.setOpcode(instruction);
                 int initialVRegisterXValue = 0x003F;
                 cpu.getVRegister()[x] = initialVRegisterXValue;
@@ -505,11 +505,11 @@ class CPUTest {
             @Test
             @DisplayName("Opcode = 8, n = 5 - should set VRegister[x] to difference of VRegister[x] and VRegister[y]")
             void executeInstruction_opcode8_n5_shouldWriteSubtractVRegisterYFromVRegisterX() {
-                int opcode = 0x8; // first nibble of instruction
+                int o = 0x8; // first nibble of instruction
                 int x = 0x02; // second nibble of instruction
                 int y = 0x003; // third nibble of instruction
                 int n = 0x0005; // last nibble of instruction
-                int instruction = (opcode << 12) + (x << 8) + (y << 4) + n;
+                int instruction = (o << 12) + (x << 8) + (y << 4) + n;
                 cpu.setOpcode(instruction);
                 int initialVRegisterXValue = 5;
                 cpu.getVRegister()[x] = initialVRegisterXValue;
@@ -525,11 +525,11 @@ class CPUTest {
             @Test
             @DisplayName("Opcode = 8, n = 5 - should set VRegister[F] to 1 if VRegister[x] greater than VRegister[y]")
             void executeInstruction_opcode8_n5_shouldSetVRegisterFToOne() {
-                int opcode = 0x8; // first nibble of instruction
+                int o = 0x8; // first nibble of instruction
                 int x = 0x02; // second nibble of instruction
                 int y = 0x003; // third nibble of instruction
                 int n = 0x0005; // last nibble of instruction
-                int instruction = (opcode << 12) + (x << 8) + (y << 4) + n;
+                int instruction = (o << 12) + (x << 8) + (y << 4) + n;
                 cpu.setOpcode(instruction);
                 int initialVRegisterXValue = 100;
                 cpu.getVRegister()[x] = initialVRegisterXValue;
@@ -544,11 +544,11 @@ class CPUTest {
             @Test
             @DisplayName("Opcode = 8, n = 5 - should set VRegister[F] to 0 if VRegister[x] less than VRegister[y]")
             void executeInstruction_opcode8_n5_shouldSetVRegisterFToZero() {
-                int opcode = 0x8; // first nibble of instruction
+                int o = 0x8; // first nibble of instruction
                 int x = 0x02; // second nibble of instruction
                 int y = 0x003; // third nibble of instruction
                 int n = 0x0005; // last nibble of instruction
-                int instruction = (opcode << 12) + (x << 8) + (y << 4) + n;
+                int instruction = (o << 12) + (x << 8) + (y << 4) + n;
                 cpu.setOpcode(instruction);
                 cpu.getVRegister()[0xF] = 0x00FF;
                 int initialVRegisterXValue = 1;
@@ -565,11 +565,11 @@ class CPUTest {
             @DisplayName("Opcode = 8, n = 5 - should set subtract VRegister[y] from VRegister[x], " +
                     "resolving unsigned byte underflow")
             void executeInstruction_opcode8_n5_shouldSetVRegisterX() {
-                int opcode = 0x8; // first nibble of instruction
+                int o = 0x8; // first nibble of instruction
                 int x = 0x02; // second nibble of instruction
                 int y = 0x003; // third nibble of instruction
                 int n = 0x0005; // last nibble of instruction
-                int instruction = (opcode << 12) + (x << 8) + (y << 4) + n;
+                int instruction = (o << 12) + (x << 8) + (y << 4) + n;
                 cpu.setOpcode(instruction);
                 int initialVRegisterXValue = 0x0022;
                 cpu.getVRegister()[x] = initialVRegisterXValue;
@@ -585,11 +585,11 @@ class CPUTest {
             @Test
             @DisplayName("Opcode = 8, n = 6 - should do unsigned right bitshift on VRegister[x]")
             void executeInstruction_opcode8_n6_shouldSetVRegisterX() {
-                int opcode = 0x8; // first nibble of instruction
+                int o = 0x8; // first nibble of instruction
                 int x = 0x02; // second nibble of instruction
                 int y = 0x003; // third nibble of instruction
                 int n = 0x0006; // last nibble of instruction
-                int instruction = (opcode << 12) + (x << 8) + (y << 4) + n;
+                int instruction = (o << 12) + (x << 8) + (y << 4) + n;
                 cpu.setOpcode(instruction);
                 int initialVRegisterXValue = 0x00AC;
                 cpu.getVRegister()[x] = initialVRegisterXValue;
@@ -602,11 +602,11 @@ class CPUTest {
             @Test
             @DisplayName("Opcode = 8, n = 6 - should set VRegister[F] to the least significant bit of VRegister[x]")
             void executeInstruction_opcode8_n6_shouldSetVRegisterF() {
-                int opcode = 0x8; // first nibble of instruction
+                int o = 0x8; // first nibble of instruction
                 int x = 0x02; // second nibble of instruction
                 int y = 0x003; // third nibble of instruction
                 int n = 0x0006; // last nibble of instruction
-                int instruction = (opcode << 12) + (x << 8) + (y << 4) + n;
+                int instruction = (o << 12) + (x << 8) + (y << 4) + n;
                 cpu.setOpcode(instruction);
                 int initialVRegisterXValue = 0x0001;
                 cpu.getVRegister()[x] = initialVRegisterXValue;
@@ -619,11 +619,11 @@ class CPUTest {
             @Test
             @DisplayName("Opcode = 8, n = 7 - should set VRegister[x] to difference of VRegister[y] and VRegister[x]")
             void executeInstruction_opcode8_n7_shouldSetVRegisterX() {
-                int opcode = 0x8; // first nibble of instruction
+                int o = 0x8; // first nibble of instruction
                 int x = 0x02; // second nibble of instruction
                 int y = 0x003; // third nibble of instruction
                 int n = 0x0007; // last nibble of instruction
-                int instruction = (opcode << 12) + (x << 8) + (y << 4) + n;
+                int instruction = (o << 12) + (x << 8) + (y << 4) + n;
                 cpu.setOpcode(instruction);
                 int initialVRegisterXValue = 0x0022;
                 cpu.getVRegister()[x] = initialVRegisterXValue;
@@ -639,11 +639,11 @@ class CPUTest {
             @Test
             @DisplayName("Opcode = 8, n = 7 - should set VRegister[F] to 1 if VRegister[y] greater than VRegister[x]")
             void executeInstruction_opcode8_n7_shouldSetVRegisterFToOne() {
-                int opcode = 0x8; // first nibble of instruction
+                int o = 0x8; // first nibble of instruction
                 int x = 0x02; // second nibble of instruction
                 int y = 0x003; // third nibble of instruction
                 int n = 0x0007; // last nibble of instruction
-                int instruction = (opcode << 12) + (x << 8) + (y << 4) + n;
+                int instruction = (o << 12) + (x << 8) + (y << 4) + n;
                 cpu.setOpcode(instruction);
                 int initialVRegisterXValue = 0x0022;
                 cpu.getVRegister()[x] = initialVRegisterXValue;
@@ -659,11 +659,11 @@ class CPUTest {
             @Test
             @DisplayName("Opcode = 8, n = 7 - should set VRegister[F] to 0 if VRegister[y] less than or equal to VRegister[x]")
             void executeInstruction_opcode8_n7_shouldSetVRegisterFToZero() {
-                int opcode = 0x8; // first nibble of instruction
+                int o = 0x8; // first nibble of instruction
                 int x = 0x02; // second nibble of instruction
                 int y = 0x003; // third nibble of instruction
                 int n = 0x0007; // last nibble of instruction
-                int instruction = (opcode << 12) + (x << 8) + (y << 4) + n;
+                int instruction = (o << 12) + (x << 8) + (y << 4) + n;
                 cpu.setOpcode(instruction);
                 cpu.getVRegister()[0xF] = 0x00FF;
                 int initialVRegisterXValue = 0x0055;
@@ -690,11 +690,11 @@ class CPUTest {
             @Test
             @DisplayName("Opcode = 8, n = E - should do unsigned left bitshift on VRegister[x]")
             void executeInstruction_opcode8_nE_shouldSetVRegisterX() {
-                int opcode = 0x8; // first nibble of instruction
+                int o = 0x8; // first nibble of instruction
                 int x = 0x02; // second nibble of instruction
                 int y = 0x003; // third nibble of instruction
                 int n = 0x000E; // last nibble of instruction
-                int instruction = (opcode << 12) + (x << 8) + (y << 4) + n;
+                int instruction = (o << 12) + (x << 8) + (y << 4) + n;
                 cpu.setOpcode(instruction);
                 int initialVRegisterXValue = 0x00AC;
                 cpu.getVRegister()[x] = initialVRegisterXValue;
@@ -707,11 +707,11 @@ class CPUTest {
             @Test
             @DisplayName("Opcode = 8, n = E - should set VRegister[F] to the most significant bit of VRegister[x]")
             void executeInstruction_opcode8_nE_shouldSetVRegisterF() {
-                int opcode = 0x8; // first nibble of instruction
+                int o = 0x8; // first nibble of instruction
                 int x = 0x02; // second nibble of instruction
                 int y = 0x003; // third nibble of instruction
                 int n = 0x000E; // last nibble of instruction
-                int instruction = (opcode << 12) + (x << 8) + (y << 4) + n;
+                int instruction = (o << 12) + (x << 8) + (y << 4) + n;
                 cpu.setOpcode(instruction);
                 int initialVRegisterXValue = 0x00AC;
                 cpu.getVRegister()[x] = initialVRegisterXValue;
@@ -727,11 +727,11 @@ class CPUTest {
         void executeInstruction_opcode9_shouldConditionallySkipNextInstruction() {
             int startingPC = 5;
             cpu.setPc(startingPC);
-            int opcode = 0x9; // first nibble of instruction
+            int o = 0x9; // first nibble of instruction
             int x = 0x02; // second nibble of instruction
             int y = 0x003; // third nibble of instruction
             int n = 0x0000; // last nibble of instruction
-            int instruction = (opcode << 12) + (x << 8) + (y << 4) + n;
+            int instruction = (o << 12) + (x << 8) + (y << 4) + n;
             cpu.setOpcode(instruction);
             int initialVRegisterXValue = 0x0055;
             cpu.getVRegister()[x] = initialVRegisterXValue;
@@ -748,11 +748,11 @@ class CPUTest {
         void executeInstruction_opcode9_shouldConditionallyNotSkipNextInstruction() {
             int startingPC = 5;
             cpu.setPc(startingPC);
-            int opcode = 0x9; // first nibble of instruction
+            int o = 0x9; // first nibble of instruction
             int x = 0x02; // second nibble of instruction
             int y = 0x003; // third nibble of instruction
             int n = 0x0007; // last nibble of instruction
-            int instruction = (opcode << 12) + (x << 8) + (y << 4) + n;
+            int instruction = (o << 12) + (x << 8) + (y << 4) + n;
             cpu.setOpcode(instruction);
             int initialVRegisterXValue = 0x0055;
             cpu.getVRegister()[x] = initialVRegisterXValue;
@@ -766,9 +766,9 @@ class CPUTest {
         @Test
         @DisplayName("Opcode A - should set IRegister to nnn")
         void executeInstruction_opcodeA_shouldSetIRegisterToNNN() {
-            int opcode = 0xA; // first nibble of instruction
+            int o = 0xA; // first nibble of instruction
             int nnn = 0x0999; // last 3 nibbles of instruction
-            int instruction = (opcode << 12) + nnn;
+            int instruction = (o << 12) + nnn;
             cpu.setOpcode(instruction);
 
             cpu.executeInstruction();
@@ -779,9 +779,9 @@ class CPUTest {
         @Test
         @DisplayName("Opcode B - should jump to location nnn plus VRegister[0]")
         void executeInstruction_opcodeB_shouldJump() {
-            int opcode = 0xB; // first nibble of instruction
+            int o = 0xB; // first nibble of instruction
             int nnn = 0x0999; // last 3 nibbles of instruction
-            int instruction = (opcode << 12) + nnn;
+            int instruction = (o << 12) + nnn;
             cpu.setOpcode(instruction);
             int vRegister0Value = 0x0055;
             cpu.getVRegister()[0] = vRegister0Value;
@@ -794,10 +794,10 @@ class CPUTest {
         @Test
         @DisplayName("Opcode C - should set VRegister[x] to a random unsigned byte and bitwise AND kk")
         void executeInstruction_opcodeC_shouldSetVRegister() {
-            int opcode = 0xC; // first nibble of instruction
+            int o = 0xC; // first nibble of instruction
             int x = 0x07; // second nibble of instruction
             int kk = 0x0055; // last 2 nibbles of instruction
-            int instruction = (opcode << 12) + (x << 8) + kk;
+            int instruction = (o << 12) + (x << 8) + kk;
             cpu.setOpcode(instruction);
             // Set VRegister to a signed value so that we will know the test is setting it to a random unsigned value
             int initialVRegisterX = -1;
@@ -816,7 +816,35 @@ class CPUTest {
         @Test
         @DisplayName("Opcode D")
         void executeInstruction_opcodeD() {
-            fail("Unimplemented.");
+            int o = 0xD; // first nibble of instruction
+            int x = 0x05; // second nibble of instruction
+            int y = 0x004; // third nibble of instruction
+            int n = 0x0001; // last nibble of instruction
+            int instruction = (o << 12) + (x << 8) + (y << 4) + n;
+            int spriteBytes = Integer.parseInt("10011011", 2);
+            int vRegisterYValue = 0x5;
+            cpu.getVRegister()[y] = vRegisterYValue;
+            int vRegisterXValue = 0x6;
+            cpu.getVRegister()[x] = vRegisterXValue;
+            cpu.setOpcode(instruction);
+            cpu.setDrawFlag(false);
+            int[] existingPixelValues = new int[]{0, 1, 1, 0, 1, 1, 0, 0};
+            Mockito.when(memory.readByte(anyInt()))
+                    .thenReturn(spriteBytes);
+            for (int existingPixelValue : existingPixelValues) {
+                Mockito.when(display.getPixel(anyInt(), anyInt()))
+                        .thenReturn(existingPixelValue);
+            }
+
+            cpu.executeInstruction();
+
+            int[] expectedNewPixelValues = new int[]{1, 0, 0, 1, 1, 0, 1, 1};
+            int expectedYCoord = vRegisterYValue % Display.HEIGHT_IN_PIXELS;
+            int lengthOfSprite = 8;
+            for (int i = 0; i < lengthOfSprite; i++) {
+                Mockito.verify(display).setPixel(vRegisterXValue + i, expectedYCoord, expectedNewPixelValues[i]);
+            }
+            assertTrue(cpu.isDrawFlagSet());
         }
 
         @Nested
@@ -828,10 +856,10 @@ class CPUTest {
             void executeInstruction_opcodeE_kk9E_shouldConditionallySkipNextInstruction() {
                 int startingPC = 10;
                 cpu.setPc(startingPC);
-                int opcode = 0xE; // first nibble of instruction
+                int o = 0xE; // first nibble of instruction
                 int x = 0x07; // second nibble of instruction
                 int kk = 0x009E; // last 2 nibbles of instruction
-                int instruction = (opcode << 12) + (x << 8) + kk;
+                int instruction = (o << 12) + (x << 8) + kk;
                 cpu.setOpcode(instruction);
                 Mockito.when(keyboard.isKeyDown(cpu.getVRegister()[x])).thenReturn(true);
 
@@ -845,10 +873,10 @@ class CPUTest {
             void executeInstruction_opcodeE_kk9E_shouldConditionallyNotSkipNextInstruction() {
                 int startingPC = 10;
                 cpu.setPc(startingPC);
-                int opcode = 0xE; // first nibble of instruction
+                int o = 0xE; // first nibble of instruction
                 int x = 0x07; // second nibble of instruction
                 int kk = 0x009E; // last 2 nibbles of instruction
-                int instruction = (opcode << 12) + (x << 8) + kk;
+                int instruction = (o << 12) + (x << 8) + kk;
                 cpu.setOpcode(instruction);
                 Mockito.when(keyboard.isKeyDown(cpu.getVRegister()[x])).thenReturn(false);
 
@@ -862,10 +890,10 @@ class CPUTest {
             void executeInstruction_opcodeE_kkA1_shouldConditionallySkipNextInstruction() {
                 int startingPC = 10;
                 cpu.setPc(startingPC);
-                int opcode = 0xE; // first nibble of instruction
+                int o = 0xE; // first nibble of instruction
                 int x = 0x07; // second nibble of instruction
                 int kk = 0x00A1; // last 2 nibbles of instruction
-                int instruction = (opcode << 12) + (x << 8) + kk;
+                int instruction = (o << 12) + (x << 8) + kk;
                 cpu.setOpcode(instruction);
                 Mockito.when(keyboard.isKeyDown(cpu.getVRegister()[x])).thenReturn(false);
 
@@ -879,10 +907,10 @@ class CPUTest {
             void executeInstruction_opcodeE_kkA1_shouldConditionallyNotSkipNextInstruction() {
                 int startingPC = 10;
                 cpu.setPc(startingPC);
-                int opcode = 0xE; // first nibble of instruction
+                int o = 0xE; // first nibble of instruction
                 int x = 0x07; // second nibble of instruction
                 int kk = 0x00A1; // last 2 nibbles of instruction
-                int instruction = (opcode << 12) + (x << 8) + kk;
+                int instruction = (o << 12) + (x << 8) + kk;
                 cpu.setOpcode(instruction);
                 Mockito.when(keyboard.isKeyDown(cpu.getVRegister()[x])).thenReturn(true);
 
@@ -899,10 +927,10 @@ class CPUTest {
             @Test
             @DisplayName("Opcode = F, kk = 07 - should set VRegister[x] to delay timer")
             void executeInstruction_opcodeF_kk07_shouldSetVRegisterToDelayTimer() {
-                int opcode = 0xF; // first nibble of instruction
+                int o = 0xF; // first nibble of instruction
                 int x = 0x07; // second nibble of instruction
                 int kk = 0x0007; // last 2 nibbles of instruction
-                int instruction = (opcode << 12) + (x << 8) + kk;
+                int instruction = (o << 12) + (x << 8) + kk;
                 cpu.setOpcode(instruction);
                 int delayTimerValue = 0x0066;
                 cpu.setDelayTimer(delayTimerValue);
@@ -917,16 +945,46 @@ class CPUTest {
             @Test
             @DisplayName("Opcode = F, kk = 0A - should wait for a key press then store the value of the key in VRegister[x]")
             void executeInstruction_opcodeF_kk0A_shouldWaitForKeyPressThenStoreKeyValueInVRegister() {
-                fail("Unimplemented.");
+                int o = 0xF; // first nibble of instruction
+                int x = 0x07; // second nibble of instruction
+                int kk = 0x000A; // last 2 nibbles of instruction
+                int instruction = (o << 12) + (x << 8) + kk;
+                int currentPc = 4; // points to current instruction
+                int previousPc = 2; // points to previous instruction
+                int startingVRegisterValue = 0x5;
+
+
+                Mockito.when(keyboard.isKeyDown(anyInt())).thenReturn(false);
+                cpu.getVRegister()[x] = startingVRegisterValue;
+                cpu.setPc(currentPc);
+                cpu.setOpcode(instruction);
+
+                cpu.executeInstruction();
+
+                assertEquals(previousPc, cpu.getPc());
+                assertEquals(startingVRegisterValue, cpu.getVRegister()[x]);
+
+
+                int keyThatWasPressed = 0xA;
+                Mockito.when(keyboard.isKeyDown(keyThatWasPressed)).thenReturn(true);
+                cpu.getVRegister()[x] = startingVRegisterValue;
+                cpu.setPc(currentPc);
+                cpu.setOpcode(instruction);
+
+                cpu.executeInstruction();
+
+                assertEquals(currentPc, cpu.getPc());
+                assertEquals(keyThatWasPressed, cpu.getVRegister()[x]);
+                Mockito.verify(keyboard).forceKeyUp(keyThatWasPressed);
             }
 
             @Test
             @DisplayName("Opcode = F, kk = 18 - should set sound timer to VRegister[x]")
             void executeInstruction_opcodeF_kk18_shouldSetSoundTimerToVRegister() {
-                int opcode = 0xF; // first nibble of instruction
+                int o = 0xF; // first nibble of instruction
                 int x = 0x07; // second nibble of instruction
                 int kk = 0x0018; // last 2 nibbles of instruction
-                int instruction = (opcode << 12) + (x << 8) + kk;
+                int instruction = (o << 12) + (x << 8) + kk;
                 cpu.setOpcode(instruction);
                 int soundTimerValue = 0x0066;
                 cpu.setSoundTimer(soundTimerValue);
@@ -941,10 +999,10 @@ class CPUTest {
             @Test
             @DisplayName("Opcode = F, kk = 1E - should add VRegister[x] to IRegister")
             void executeInstruction_opcodeF_kk1E_shouldAddVRegisterToIRegister() {
-                int opcode = 0xF; // first nibble of instruction
+                int o = 0xF; // first nibble of instruction
                 int x = 0x07; // second nibble of instruction
                 int kk = 0x001E; // last 2 nibbles of instruction
-                int instruction = (opcode << 12) + (x << 8) + kk;
+                int instruction = (o << 12) + (x << 8) + kk;
                 cpu.setOpcode(instruction);
                 int initialIRegisterValue = 0x0022;
                 cpu.setIRegister(initialIRegisterValue);
@@ -959,10 +1017,10 @@ class CPUTest {
             @Test
             @DisplayName("Opcode = F, kk = 29 - should set IRegister to the value VRegister[x] times 5 and set draw flag to true")
             void executeInstruction_opcodeF_kk29_shouldSetIRegisterAndSetDrawFlagToTrue() {
-                int opcode = 0xF; // first nibble of instruction
+                int o = 0xF; // first nibble of instruction
                 int x = 0x07; // second nibble of instruction
                 int kk = 0x0029; // last 2 nibbles of instruction
-                int instruction = (opcode << 12) + (x << 8) + kk;
+                int instruction = (o << 12) + (x << 8) + kk;
                 cpu.setOpcode(instruction);
                 int initialIRegisterValue = 0x0022;
                 cpu.setIRegister(initialIRegisterValue);
@@ -980,10 +1038,10 @@ class CPUTest {
             @DisplayName("Opcode = F, kk = 33 - should store the binary coded decimal representation of VRegister[x] " +
                     "in memory locations IRegister, IRegister + 1, and IRegister + 2")
             void executeInstruction_opcodeF_kk33_shouldStoreBCDRepresentationOfVRegisterInMemory() {
-                int opcode = 0xF; // first nibble of instruction
+                int o = 0xF; // first nibble of instruction
                 int x = 0x07; // second nibble of instruction
                 int kk = 0x0033; // last 2 nibbles of instruction
-                int instruction = (opcode << 12) + (x << 8) + kk;
+                int instruction = (o << 12) + (x << 8) + kk;
                 cpu.setOpcode(instruction);
                 int initialIRegisterValue = 0x0022;
                 cpu.setIRegister(initialIRegisterValue);
@@ -1001,10 +1059,10 @@ class CPUTest {
             @DisplayName("Opcode = F, kk = 65 - should load registers VRegister[0] through VRegister[x] from memory " +
                     "starting at location IRegister")
             void executeInstruction_opcodeF_kk65_shouldLoadVRegistersFromMemory() {
-                int opcode = 0xF; // first nibble of instruction
+                int o = 0xF; // first nibble of instruction
                 int x = 0x07; // second nibble of instruction
                 int kk = 0x0065; // last 2 nibbles of instruction
-                int instruction = (opcode << 12) + (x << 8) + kk;
+                int instruction = (o << 12) + (x << 8) + kk;
                 cpu.setOpcode(instruction);
                 int initialIRegisterValue = 0x0022;
                 cpu.setIRegister(initialIRegisterValue);
