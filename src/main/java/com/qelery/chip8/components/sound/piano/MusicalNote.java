@@ -1,4 +1,4 @@
-package com.qelery.chip8.sound.piano;
+package com.qelery.chip8.components.sound.piano;
 
 public enum MusicalNote {
 

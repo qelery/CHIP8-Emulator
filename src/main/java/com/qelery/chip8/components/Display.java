@@ -1,4 +1,4 @@
-package com.qelery.chip8;
+package com.qelery.chip8.components;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;

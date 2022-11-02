@@ -1,4 +1,4 @@
-package com.qelery.chip8.sound.wave;
+package com.qelery.chip8.components.sound.wave;
 
 public class SawtoothWave extends AbstractWave {
 

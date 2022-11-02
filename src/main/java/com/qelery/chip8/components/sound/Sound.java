@@ -1,4 +1,4 @@
-package com.qelery.chip8.sound;
+package com.qelery.chip8.components.sound;
 
 public interface Sound {
 

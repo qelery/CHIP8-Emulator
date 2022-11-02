@@ -1,4 +1,4 @@
-package com.qelery.chip8;
+package com.qelery.chip8.components;
 
 /**
  * A Memory object where the font sprite and ROM data are loaded.

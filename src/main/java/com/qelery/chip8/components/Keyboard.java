@@ -1,4 +1,4 @@
-package com.qelery.chip8;
+package com.qelery.chip8.components;
 
 import javafx.scene.input.KeyCode;
 import org.apache.logging.log4j.LogManager;

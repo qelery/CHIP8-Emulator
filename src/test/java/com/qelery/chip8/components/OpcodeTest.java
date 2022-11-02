@@ -1,5 +1,6 @@
-package com.qelery.chip8;
+package com.qelery.chip8.components;
 
+import com.qelery.chip8.components.Opcode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

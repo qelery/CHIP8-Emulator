@@ -1,6 +1,6 @@
-package com.qelery.chip8.sound.wave;
+package com.qelery.chip8.components.sound.wave;
 
-import com.qelery.chip8.sound.Sound;
+import com.qelery.chip8.components.sound.Sound;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

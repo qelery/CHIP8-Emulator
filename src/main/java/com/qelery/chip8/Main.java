@@ -1,12 +1,9 @@
 package com.qelery.chip8;
 
-import com.qelery.chip8.sound.Sound;
-import com.qelery.chip8.sound.wave.SineWave;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -23,61 +20,58 @@ import java.util.stream.Stream;
  */
 public class Main extends Application {
 
-    private Memory memory;
-    private CPU cpu;
-    private Display display;
-    private Sound sound;
-    private Keyboard keyboard;
-
+    private Chip8VM chip8;
     private Stage stage;
     private String loadedROMName;
 
+    public static void main(String[] args) {
+        launch(args);
+    }
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         this.stage = stage;
         this.initialize();
     }
 
+    @Override
+    public void stop() {
+        // Ensures safe closure of SoundThread
+        chip8.getSound().closeLine();
+        System.exit(0);
+    }
+
 
     private void initialize() {
-        this.display = new Display(12, Color.WHITE, Color.BLACK);
-        this.keyboard = new Keyboard();
-        this.sound = new SineWave(300);
-        this.memory = new Memory(4096);
-        this.cpu = new CPU(500, memory, display, sound, keyboard);
+        this.chip8 = Chip8VM.defaultBuild();
 
         stage.setTitle("CHIP8 by qelery");
         Group root = new Group();
-        root.getChildren().add(display);
+        root.getChildren().add(chip8.getDisplay());
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setResizable(false);
 
-        scene.setOnKeyPressed(
-                e -> keyboard.keyDown(e.getCode()));
+        scene.setOnKeyPressed(e -> chip8.getKeyboard().keyDown(e.getCode()));
 
-        scene.setOnKeyReleased(
-                e -> keyboard.keyUp(e.getCode()));
+        scene.setOnKeyReleased(e -> chip8.getKeyboard().keyUp(e.getCode()));
 
-
-        int frameHertz = 60; // CHIP-8 delay and sound timers always count down at 60 hz
-        long frameDurationNanoSec = Math.round((1.0 / frameHertz) * 1.0e9);
-        int cpuCyclesPerFrame = (int) Math.round(cpu.getClockSpeed() * frameDurationNanoSec / 1.0e9);
+        long frameDurationNanoSec = Math.round((1.0 / Chip8VM.FRAME_HERTZ) * 1.0e9);
+        int cpuCyclesPerFrame = (int) Math.round(chip8.getCpu().getClockSpeed() * frameDurationNanoSec / 1.0e9);
 
         new AnimationTimer() {
             public void handle(long frameStartTime) {
 
                 for (int i = 0; i < cpuCyclesPerFrame; i++) {
-                    cpu.emulateCycle();
+                    chip8.getCpu().emulateCycle();
                 }
 
-                if (cpu.isDrawFlagSet()) {
-                    display.render();
-                    cpu.clearDrawFlag();
+                if (chip8.getCpu().isDrawFlagSet()) {
+                    chip8.getDisplay().render();
+                    chip8.getCpu().clearDrawFlag();
                 }
 
-                cpu.tickClocks();
+                chip8.getCpu().tickClocks();
                 pauseUntilFrameOver(frameStartTime, frameDurationNanoSec);
             }
         }.start();
@@ -129,7 +123,7 @@ public class Main extends Application {
             Path fileLocation = Paths.get("src/main/resources/ROMS/" + fileName.toUpperCase());
             try {
                 byte[] byteArray = Files.readAllBytes(fileLocation);
-                memory.loadData(byteArray, 0x200);
+                chip8.getMemory().loadData(byteArray, 0x200);
                 loadedROMName = fileName;
                 return;
             } catch (IOException e) {
@@ -140,7 +134,7 @@ public class Main extends Application {
 
     public void printInstructions() {
         clearConsole();
-        keyboard.printControls();
+        chip8.getKeyboard().printControls();
 
         Path fileLocation = Paths.get("src/main/resources/GameInstructions.txt");
         try (Scanner reader = new Scanner(fileLocation)) {
@@ -154,7 +148,7 @@ public class Main extends Application {
                 if (gameName.equalsIgnoreCase(loadedROMName)) {
                     System.out.println("\n");
                     System.out.println(String.format("<%s> INSTRUCTIONS:", loadedROMName.toUpperCase()));
-                    for (String line: gameInstructions.split("<br>")) {
+                    for (String line : gameInstructions.split("<br>")) {
                         System.out.println(line.trim());
                     }
                     break;
@@ -170,15 +164,5 @@ public class Main extends Application {
         System.out.println(new String(new char[50]).replace("\0", System.lineSeparator()));
     }
 
-    @Override
-    public void stop() {
-        // Ensures safe closure of SoundThread
-        sound.closeLine();
-        System.exit(0);
-    }
-
-    public static void main(String[] args) {
-        launch(args);
-    }
 
 }

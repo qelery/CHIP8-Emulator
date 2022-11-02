@@ -1,13 +1,13 @@
-package com.qelery.chip8.sound.wave;
+package com.qelery.chip8.components.sound.wave;
 
-public class SquareWave extends AbstractWave {
+public class SineWave extends AbstractWave {
 
     /**
-     * Creates a square wave tone.
+     * Creates a sine wave tone.
      *
      * @param frequency in hertz
      */
-    public SquareWave(double frequency) {
+    public SineWave(double frequency) {
         super(frequency);
     }
 
@@ -21,8 +21,7 @@ public class SquareWave extends AbstractWave {
         for (int i = 0; i < toneBuffer.length; i++) {
             double angle = 2.0 * Math.PI * i / period;
             float byteAmplitude = 127f;
-            double sinPoint = Math.sin(angle) * byteAmplitude * volume;
-            toneBuffer[i] = (byte) Math.signum(sinPoint);
+            toneBuffer[i] = (byte) (Math.sin(angle) * byteAmplitude * volume);
         }
         return toneBuffer;
     }

@@ -1,5 +1,7 @@
 package com.qelery.chip8.sound.piano;
 
+import com.qelery.chip8.components.sound.piano.MusicalNote;
+import com.qelery.chip8.components.sound.piano.PianoNote;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;

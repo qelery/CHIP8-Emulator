@@ -1,4 +1,4 @@
-package com.qelery.chip8;
+package com.qelery.chip8.components;
 
 
 import java.util.Objects;
