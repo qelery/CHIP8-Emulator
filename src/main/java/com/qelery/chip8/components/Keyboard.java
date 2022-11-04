@@ -109,7 +109,7 @@ public class Keyboard {
         keys[keyVal] = false;
     }
 
-    public void printControls() {
+    public void printKeyControls() {
         String keyMappingsLayout = """
                 YOUR KEYBOARD CONTROLS:        ORIGINAL CHIP-8 LAYOUT:
                       1  2  3  4                    1  2  3  C

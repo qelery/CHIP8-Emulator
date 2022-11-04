@@ -13,10 +13,13 @@ package com.qelery.chip8.components;
 public class Memory {
 
     /**
-     * Skip the first 512 bytes of memory. In the original CHIP-8 they
-     * held the interpreter.
+     * The first 512 bytes of memory held the interpreter in the
+     * original CHIP-8. Loading and reading ROM data starts after
+     * that memory location.
      */
-    public static final int READ_START_LOCATION = 512;
+    public static final int READ_WRITE_START_LOCATION = 512;
+    public static final int DEFAULT_SIZE = 4096;
+
     private final int[] RAM;
 
     /**

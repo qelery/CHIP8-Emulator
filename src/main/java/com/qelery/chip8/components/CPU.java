@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.Random;
 
 /**
- * A class to create an emulated cpu for fetching, decoding, and executing
+ * An emulated cpu for fetching, decoding, and executing
  * instructions from a CHIP-8 ROM.
  * <p>
  * <h2>References</h2>
@@ -18,6 +18,11 @@ import java.util.Random;
 public class CPU {
 
     private static final Logger logger = LogManager.getLogger(CPU.class);
+
+    /**
+     * Delay and sound timers always count down at 60 hz
+     */
+    public static final int TIMERS_HERTZ = 60;
 
     /**
      * The clock speed of the CPU in  hertz.
@@ -84,7 +89,7 @@ public class CPU {
 
     public CPU(int clockSpeed, Memory memory, Display display, Sound sound, Keyboard keyboard) {
         this.clockSpeed = clockSpeed;
-        this.pc = Memory.READ_START_LOCATION;
+        this.pc = Memory.READ_WRITE_START_LOCATION;
         this.VRegister = new int[16];
         this.stack = new int[16];
         this.drawFlag = false;

@@ -12,7 +12,7 @@ class MemoryTest {
     Memory memory;
 
     @BeforeEach
-    void setup() {
+    void setUp() {
         int typicalMemoryLocationsInChip8 = 4096;
         this.memory = new Memory(typicalMemoryLocationsInChip8);
     }

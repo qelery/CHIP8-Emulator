@@ -15,7 +15,7 @@ class SawtoothWaveTest {
     static int testsExecuted = 0;
 
     @BeforeEach
-    void setup() {
+    void setUp() {
         double frequency = 300;
         this.sound = new SawtoothWave(frequency);
     }

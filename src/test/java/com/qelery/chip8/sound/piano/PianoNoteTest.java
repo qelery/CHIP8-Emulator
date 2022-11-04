@@ -16,7 +16,7 @@ class PianoNoteTest {
     static int testsExecuted = 0;
 
     @BeforeEach
-    void setup() {
+    void setUp() {
         this.sound = new PianoNote(MusicalNote.C);
     }
 

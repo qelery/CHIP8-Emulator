@@ -30,7 +30,7 @@ class CPUTest {
     Keyboard keyboard;
 
     @BeforeEach
-    void setup() {
+    void setUp() {
         int clockSpeed = 500;
         this.cpu = new CPU(clockSpeed, memory, display, sound, keyboard);
     }

@@ -1,0 +1,11 @@
+TESTROM1: These are game instructions for TESTROM1.
+
+TESTROM2: These are game instructions for TESTROM2.
+
+TESTROM3: These are game instructions for TESTROM3.
+
+TESTROM4: These are game instructions for TESTROM4.
+
+TESTROM5: These are game instructions for TESTROM5.
+
+TESTROM6: These are game instructions for TESTROM6.

@@ -13,7 +13,7 @@ class KeyboardTest {
     Keyboard keyboard;
 
     @BeforeEach
-    void setup() {
+    void setUp() {
         this.keyboard = new Keyboard();
     }
 

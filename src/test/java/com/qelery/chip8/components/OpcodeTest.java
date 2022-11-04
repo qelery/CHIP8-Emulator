@@ -14,7 +14,7 @@ class OpcodeTest {
     int nibble1, nibble2, nibble3, nibble4;
 
     @BeforeEach
-    void setup() {
+    void setUp() {
         this.nibble1 = 0x1;
         this.nibble2 = 0x2;
         this.nibble3 = 0x3;

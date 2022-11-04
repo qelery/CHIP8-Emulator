@@ -7,7 +7,7 @@ import javafx.scene.paint.Color;
 import java.util.Arrays;
 
 /**
- * A class that displays the graphics of the CHIP-8 program.
+ * Displays the graphics of the CHIP-8 program.
  * <p>
  * The original CHIP-8 display resolution was 64x32 pixels and
  * monochrome. Graphics are drawn to the display using sprites
@@ -67,7 +67,7 @@ public class Display extends Canvas {
      *              (e.g. if scale is 5, then each CHIP-8 'pixel'
      *              will take up a 5x5 block of pixels on your
      *              device's screen)
-     * @param color the pixel ON color
+     * @param color the color of ON pixels
      */
     public Display(int scale, Color color) {
         super(LENGTH_IN_PIXELS * scale, HEIGHT_IN_PIXELS * scale);
@@ -93,8 +93,8 @@ public class Display extends Canvas {
      *                       (e.g. if scale is 5, then each CHIP-8 'pixel'
      *                       will take up a 5x5 block of pixels on your
      *                       device's screen)
-     * @param primaryColor   the pixel ON color
-     * @param secondaryColor the pixel OFF color
+     * @param primaryColor   the color of ON pixels
+     * @param secondaryColor the color of OFF pixels
      */
     public Display(int scale, Color primaryColor, Color secondaryColor) {
         super(LENGTH_IN_PIXELS * scale, HEIGHT_IN_PIXELS * scale);
